@@ -1,4 +1,3 @@
-using System.Reflection;
 using FluentAssertions;
 using WebAPI.Utility;
 
@@ -12,7 +11,7 @@ public class LogParsingTests
     [Fact]
     public void GivenAFilePath_OpeningTheZip_ReturnsNoError()
     {
-        var stream = new LogParser().GetLogStreamFromZip(new FileStream(logPath, FileMode.Open), zipPath);
+        using var stream = new LogParser().GetLogStreamFromZip(new FileStream(logPath, FileMode.Open), zipPath);
         stream.Should().NotBeNull();
     }
 }
