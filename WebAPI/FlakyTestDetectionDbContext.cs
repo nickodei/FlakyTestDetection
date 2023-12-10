@@ -2,10 +2,4 @@
 
 using Microsoft.EntityFrameworkCore;
 
-public class FlakyTestDetectionDbContext: DbContext
-{
-    public FlakyTestDetectionDbContext (DbContextOptions<FlakyTestDetectionDbContext> options) : base(options)
-    {
-    }
-    
-}
+public class FlakyTestDetectionDbContext(DbContextOptions<FlakyTestDetectionDbContext> options) : DbContext(options);
