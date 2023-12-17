@@ -36,8 +36,4 @@
       <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="Settings\default.env" />
-    </ItemGroup>
-
 </Project>
