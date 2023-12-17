@@ -27,4 +27,10 @@
       <ProjectReference Include="..\WebAPI\WebAPI.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="TestLogs\testLogs.txt">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

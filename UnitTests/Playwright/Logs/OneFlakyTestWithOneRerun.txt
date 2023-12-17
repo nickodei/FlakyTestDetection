@@ -1,0 +1,68 @@
+2023-12-13T10:29:43.4676336Z ##[group]Run xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npm run test:e2e:playwright -- --shard=6/8
+2023-12-13T10:29:43.4677376Z [36;1mxvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npm run test:e2e:playwright -- --shard=6/8[0m
+2023-12-13T10:29:43.4728593Z shell: /usr/bin/bash -e {0}
+2023-12-13T10:29:43.4728903Z env:
+2023-12-13T10:29:43.4729139Z   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+2023-12-13T10:29:43.4729461Z ##[endgroup]
+2023-12-13T10:29:49.9877360Z 
+2023-12-13T10:29:49.9878359Z > gutenberg@17.3.0-rc.1 test:e2e:playwright
+2023-12-13T10:29:49.9879581Z > wp-scripts test-playwright --config test/e2e/playwright.config.ts --shard=6/8
+2023-12-13T10:29:49.9880313Z 
+2023-12-13T10:29:54.4054495Z 
+2023-12-13T10:29:54.4055262Z Running 115 tests using 1 worker, shard 6 of 8
+2023-12-13T10:30:50.6796815Z ··········································Failed to load resource: the server responded with a status of 404 (Not Found)
+2023-12-13T10:33:41.2392020Z ×±····································
+2023-12-13T10:36:19.0252210Z ·····°······························
+2023-12-13T10:36:19.0260064Z 
+2023-12-13T10:36:19.0279068Z   1) [chromium] › site-editor/font-library.spec.js:45:3 › Font Library › When a theme with bundled fonts is active › should display the "Manage Fonts" icon 
+2023-12-13T10:36:19.0281066Z 
+2023-12-13T10:36:19.0281455Z     TimeoutError: locator.click: Timeout 10000ms exceeded.
+2023-12-13T10:36:19.0282242Z     =========================== logs ===========================
+2023-12-13T10:36:19.0283271Z     waiting for frameLocator('[name="editor-canvas"]').locator('body')
+2023-12-13T10:36:19.0283989Z     ============================================================
+2023-12-13T10:36:19.0284252Z 
+2023-12-13T10:36:19.0284453Z       40 | 				postType: 'wp_template',
+2023-12-13T10:36:19.0284767Z       41 | 			} );
+2023-12-13T10:36:19.0285169Z     > 42 | 			await editor.canvas.locator( 'body' ).click();
+2023-12-13T10:36:19.0285630Z          | 			                                      ^
+2023-12-13T10:36:19.0285991Z       43 | 		} );
+2023-12-13T10:36:19.0286215Z       44 |
+2023-12-13T10:36:19.0286700Z       45 | 		test( 'should display the "Manage Fonts" icon', async ( { page } ) => {
+2023-12-13T10:36:19.0287088Z 
+2023-12-13T10:36:19.0287621Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/site-editor/font-library.spec.js:42:42
+2023-12-13T10:36:19.0288552Z 
+2023-12-13T10:36:19.0289442Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-13T10:36:19.0291359Z     artifacts/test-results/site-editor-font-library-Font-Library-When-a-t-10353--is-active-should-display-the-Manage-Fonts-icon-chromium/test-failed-1.png
+2023-12-13T10:36:19.0293382Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-13T10:36:19.0293761Z 
+2023-12-13T10:36:19.0294229Z     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-13T10:36:19.0295592Z     artifacts/test-results/site-editor-font-library-Font-Library-When-a-t-10353--is-active-should-display-the-Manage-Fonts-icon-chromium/trace.zip
+2023-12-13T10:36:19.0296538Z     Usage:
+2023-12-13T10:36:19.0296670Z 
+2023-12-13T10:36:19.0297705Z         npx playwright show-trace artifacts/test-results/site-editor-font-library-Font-Library-When-a-t-10353--is-active-should-display-the-Manage-Fonts-icon-chromium/trace.zip
+2023-12-13T10:36:19.0298694Z 
+2023-12-13T10:36:19.0299202Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-13T10:36:19.0299756Z 
+2023-12-13T10:36:19.0299893Z   1 flaky
+2023-12-13T10:36:19.0301420Z     [chromium] › site-editor/font-library.spec.js:45:3 › Font Library › When a theme with bundled fonts is active › should display the "Manage Fonts" icon 
+2023-12-13T10:36:19.0302730Z   1 skipped
+2023-12-13T10:36:19.0303287Z   113 passed (6.5m)
+2023-12-13T10:36:19.0345333Z ##[error]  1) [chromium] › site-editor/font-library.spec.js:45:3 › Font Library › When a theme with bundled fonts is active › should display the "Manage Fonts" icon 
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+    waiting for frameLocator('[name="editor-canvas"]').locator('body')
+    ============================================================
+
+      40 | 				postType: 'wp_template',
+      41 | 			} );
+    > 42 | 			await editor.canvas.locator( 'body' ).click();
+         | 			                                      ^
+      43 | 		} );
+      44 |
+      45 | 		test( 'should display the "Manage Fonts" icon', async ( { page } ) => {
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/site-editor/font-library.spec.js:42:42
+2023-12-13T10:36:19.0363290Z ##[notice]  1 flaky
+    [chromium] › site-editor/font-library.spec.js:45:3 › Font Library › When a theme with bundled fonts is active › should display the "Manage Fonts" icon 
+  1 skipped
+  113 passed (6.5m)

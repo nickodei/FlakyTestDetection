@@ -1,0 +1,21 @@
+2023-12-13T14:17:43.4179721Z ##[group]Run xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npm run test:e2e:playwright -- --shard=1/8
+2023-12-13T14:17:43.4180799Z [36;1mxvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npm run test:e2e:playwright -- --shard=1/8[0m
+2023-12-13T14:17:43.4231516Z shell: /usr/bin/bash -e {0}
+2023-12-13T14:17:43.4231832Z env:
+2023-12-13T14:17:43.4232088Z   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+2023-12-13T14:17:43.4232424Z ##[endgroup]
+2023-12-13T14:17:43.9051917Z 
+2023-12-13T14:17:43.9052796Z > gutenberg@17.3.0-rc.1 test:e2e:playwright
+2023-12-13T14:17:43.9054207Z > wp-scripts test-playwright --config test/e2e/playwright.config.ts --shard=1/8
+2023-12-13T14:17:43.9055141Z 
+2023-12-13T14:17:48.2876504Z 
+2023-12-13T14:17:48.2877287Z Running 162 tests using 1 worker, shard 1 of 8
+2023-12-13T14:21:36.0785656Z ··········································································Access to fetch at 'https://wp20.wordpress.net/wp-content/themes/twentyseventeen-wp20/images/wp20-logo-white.svg?' from origin 'http://localhost:8889' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+2023-12-13T14:21:36.0789383Z Failed to load resource: net::ERR_FAILED
+2023-12-13T14:21:48.4002565Z ····°°
+2023-12-13T14:25:14.3438646Z °°°°°°°°°·······································································
+2023-12-13T14:25:17.2085480Z ··
+2023-12-13T14:25:17.2091778Z   11 skipped
+2023-12-13T14:25:17.2092220Z   151 passed (7.5m)
+2023-12-13T14:25:17.2123973Z ##[notice]  11 skipped
+  151 passed (7.5m)

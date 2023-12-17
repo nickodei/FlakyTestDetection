@@ -1,0 +1,99 @@
+﻿@page "/Scraper"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.SignalR.Client
+@using WebApp.Clients
+@using Application.Features.Github.Models
+@inject NavigationManager Navigation
+@inject IScraperClient client
+@implements IAsyncDisposable
+
+<h3>Scraper</h3>
+
+<div Class="rz-p-0 rz-p-md-12">
+    <RadzenTemplateForm TItem="ScrapingRequest" Data="model" Submit="OnSubmit">
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Class="rz-p-sm-12">
+            <RadzenFormField Text="Owner" >
+                <ChildContent>
+                    <RadzenTextBox Name="Owner" @bind-Value="model.Owner" />
+                </ChildContent>
+                <Helper>
+                    <RadzenRequiredValidator Component="Owner" Text="Owner is required." />
+                </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Repository">
+                <ChildContent>
+                    <RadzenTextBox Name="Repository" @bind-Value="model.Repository" />
+                </ChildContent>
+                <Helper>
+                    <RadzenRequiredValidator Component="Repository" Text="Repository is required." />
+                </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Workflow Name (yml)">
+                <ChildContent>
+                    <RadzenTextBox Name="WorkflowName" @bind-Value="model.WorkflowName" />
+                </ChildContent>
+                <Helper>
+                    <RadzenRequiredValidator Component="WorkflowName" Text="Name of Workflow is required." />
+                </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Log-File Path">
+                <ChildContent>
+                    <RadzenTextBox Name="LogFilePath" @bind-Value="model.LogFilePath" />
+                </ChildContent>
+                <Helper>
+                    <RadzenRequiredValidator Component="LogFilePath" Text="LogFilePath is required." />
+                </Helper>
+            </RadzenFormField>
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" ></RadzenButton>
+            <RadzenButton ButtonType="ButtonType.Button" Text="Cancel" Click="Cancel" ></RadzenButton>
+        </RadzenStack>
+    </RadzenTemplateForm>
+</div>
+
+<EventConsole @ref=@console />
+
+@code {
+    private EventConsole console;
+    private HubConnection? hubConnection;
+    private ScrapingRequest model = new()
+    {
+        Owner = "WordPress",
+        Repository = "gutenberg",
+        WorkflowName = "end2end-test.yml",
+        LogFilePath = "Playwright - 7/7_Run the tests.txt"
+    };
+    
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(new Uri("http://host.docker.internal:5000/scraperhub"))
+            .Build();
+
+        hubConnection.On<string>("ReceiveLog", (message) =>
+        {
+            console.Log(message);
+        });
+
+        await hubConnection.StartAsync();
+    }
+    
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+    
+    async Task OnSubmit(ScrapingRequest request)
+    {
+        await client.StartScraping(request);
+    }
+
+    async Task Cancel()
+    {
+        await client.StopScraping();
+    }
+}

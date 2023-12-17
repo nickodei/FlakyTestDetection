@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using WebAPI;
-using WebAPI.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();

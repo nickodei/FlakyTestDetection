@@ -1,0 +1,34 @@
+﻿@page "/RepositoryList"
+@using Microsoft.EntityFrameworkCore
+@using Application.Infrastructure
+@using Application.Features.Github.Entities
+@rendermode InteractiveServer
+
+@implements IDisposable
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h3>Repositories</h3>
+<RadzenDataGrid Data="repositories">
+    <Columns>
+        <RadzenDataGridColumn TItem="Repository" Property="Id" Title="Id"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Repository" Property="Owner" Title="Owner"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Repository" Property="Name" Title="Name"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+@code {
+    private ApplicationDbContext? dbContext;
+    private IEnumerable<Repository> repositories = [];
+
+    protected override Task OnInitializedAsync()
+    {
+        dbContext = DbFactory.CreateDbContext();
+        repositories = dbContext.Repositories.ToList();
+
+        return base.OnInitializedAsync();
+    }
+
+    public void Dispose()
+    {
+        dbContext?.Dispose();
+    }
+}

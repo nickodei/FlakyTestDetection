@@ -1,0 +1,46 @@
+﻿@page "/WorkflowRunList"
+@rendermode InteractiveServer
+
+@using Microsoft.EntityFrameworkCore
+@using Application.Infrastructure
+@using Application.Features.Github.Entities
+
+@implements IDisposable
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h3>Workflow-Runs</h3>
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="workflowRuns" TItem="WorkflowRun" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <HeaderTemplate>
+        <RadzenButton Text="Delete Workflow-Runs" Click="DeleteAllWorkflowRuns"  />
+    </HeaderTemplate>
+    <Columns>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="Id" Title="Id"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="WorkflowRunId" Title="WorkflowRun Id"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="WorkflowName" Title="Workflow Name"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+@code {
+    private ApplicationDbContext? dbContext;
+    private IEnumerable<WorkflowRun> workflowRuns = [];
+
+    protected override Task OnInitializedAsync()
+    {
+        dbContext = DbFactory.CreateDbContext();
+        workflowRuns = dbContext.WorkflowRuns.ToList();
+
+        return base.OnInitializedAsync();
+    }
+
+    private void DeleteAllWorkflowRuns()
+    {
+        dbContext?.WorkflowRuns.RemoveRange(dbContext.WorkflowRuns);
+        dbContext?.SaveChanges();
+        workflowRuns = [];
+    }
+
+    public void Dispose()
+    {
+        dbContext?.Dispose();
+    }
+}

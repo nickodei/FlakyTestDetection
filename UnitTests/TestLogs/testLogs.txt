@@ -1,0 +1,968 @@
+2023-12-11T16:31:58.3233522Z ##[group]Run xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npm run test:e2e:playwright -- --shard=4/8
+2023-12-11T16:31:58.3234611Z [36;1mxvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npm run test:e2e:playwright -- --shard=4/8[0m
+2023-12-11T16:31:58.3279420Z shell: /usr/bin/bash -e {0}
+2023-12-11T16:31:58.3279740Z env:
+2023-12-11T16:31:58.3280015Z   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+2023-12-11T16:31:58.3280357Z ##[endgroup]
+2023-12-11T16:31:58.8990428Z 
+2023-12-11T16:31:58.8991269Z > gutenberg@17.2.0 test:e2e:playwright
+2023-12-11T16:31:58.8992922Z > wp-scripts test-playwright --config test/e2e/playwright.config.ts --shard=4/8
+2023-12-11T16:31:58.8993750Z 
+2023-12-11T16:32:03.8143344Z 
+2023-12-11T16:32:03.8144189Z Running 134 tests using 1 worker, shard 4 of 8
+2023-12-11T16:36:32.0928692Z ·······················××F××F···················································
+2023-12-11T16:44:51.6466649Z ·················××T··××F·····································
+2023-12-11T16:44:51.6474556Z 
+2023-12-11T16:44:51.6493445Z   1) [chromium] › editor/various/copy-cut-paste.spec.js:249:2 › Copy/cut/paste › should copy only partial selection of text blocks 
+2023-12-11T16:44:51.6494137Z 
+2023-12-11T16:44:51.6494455Z     Error: [31mSnapshot comparison failed:[39m
+2023-12-11T16:44:51.6495401Z 
+2023-12-11T16:44:51.6495719Z       [32m<!-- wp:paragraph -->[39m
+2023-12-11T16:44:51.6498925Z       [32m<p>A </p>[39m
+2023-12-11T16:44:51.6499313Z       [32m<!-- /wp:paragraph -->[39m
+2023-12-11T16:44:51.6499553Z 
+2023-12-11T16:44:51.6499727Z       [32m[39m<!-- wp:paragraph -->
+2023-12-11T16:44:51.6500051Z       <p>block</p>
+2023-12-11T16:44:51.6500341Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6500543Z 
+2023-12-11T16:44:51.6500670Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6500955Z       <p>B </p>
+2023-12-11T16:44:51.6501317Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6501660Z 
+2023-12-11T16:44:51.6501875Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6502439Z       <p>[0m[9m[31mA block</p>[39m[29m[0m
+2023-12-11T16:44:51.6502944Z       [0m[9m[31m<!-- /wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6503228Z 
+2023-12-11T16:44:51.6503447Z       [0m[9m[31m<!-- wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6503918Z       [0m[9m[31m<p>B [39m[29m[0mblock</p>
+2023-12-11T16:44:51.6504304Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6504518Z 
+2023-12-11T16:44:51.6505947Z     Expected: [33m/home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt[39m
+2023-12-11T16:44:51.6509511Z     Received: [33m/home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt[39m
+2023-12-11T16:44:51.6511096Z 
+2023-12-11T16:44:51.6511103Z 
+2023-12-11T16:44:51.6511350Z       277 | 		await page.keyboard.press( 'ArrowUp' );
+2023-12-11T16:44:51.6511896Z       278 | 		await pageUtils.pressKeys( 'primary+v' );
+2023-12-11T16:44:51.6512500Z     > 279 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+2023-12-11T16:44:51.6513066Z           | 		                                              ^
+2023-12-11T16:44:51.6513428Z       280 | 	} );
+2023-12-11T16:44:51.6513670Z       281 |
+2023-12-11T16:44:51.6514242Z       282 | 	test( 'should copy/paste partial selection with other blocks in-between', async ( {
+2023-12-11T16:44:51.6514825Z 
+2023-12-11T16:44:51.6515484Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:279:49
+2023-12-11T16:44:51.6516072Z 
+2023-12-11T16:44:51.6516712Z     attachment #1: Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-expected.txt (text/plain) 
+2023-12-11T16:44:51.6518076Z     test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt
+2023-12-11T16:44:51.6519604Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6520004Z 
+2023-12-11T16:44:51.6521009Z     attachment #2: Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt (text/plain) 
+2023-12-11T16:44:51.6523811Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt
+2023-12-11T16:44:51.6525502Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6526168Z 
+2023-12-11T16:44:51.6526988Z     attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6528952Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium/test-failed-1.png
+2023-12-11T16:44:51.6530889Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6531534Z 
+2023-12-11T16:44:51.6532245Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6533732Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium/trace.zip
+2023-12-11T16:44:51.6535592Z     Usage:
+2023-12-11T16:44:51.6535739Z 
+2023-12-11T16:44:51.6537448Z         npx playwright show-trace artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium/trace.zip
+2023-12-11T16:44:51.6538451Z 
+2023-12-11T16:44:51.6538849Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6539219Z 
+2023-12-11T16:44:51.6539638Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6540046Z 
+2023-12-11T16:44:51.6540258Z     Error: [31mSnapshot comparison failed:[39m
+2023-12-11T16:44:51.6540542Z 
+2023-12-11T16:44:51.6540712Z       [32m<!-- wp:paragraph -->[39m
+2023-12-11T16:44:51.6541076Z       [32m<p>A </p>[39m
+2023-12-11T16:44:51.6541420Z       [32m<!-- /wp:paragraph -->[39m
+2023-12-11T16:44:51.6541669Z 
+2023-12-11T16:44:51.6541830Z       [32m[39m<!-- wp:paragraph -->
+2023-12-11T16:44:51.6542142Z       <p>block</p>
+2023-12-11T16:44:51.6542557Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6542899Z 
+2023-12-11T16:44:51.6543129Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6543590Z       <p>B </p>
+2023-12-11T16:44:51.6544048Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6544373Z 
+2023-12-11T16:44:51.6544604Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6545033Z       <p>[0m[9m[31mA block</p>[39m[29m[0m
+2023-12-11T16:44:51.6545505Z       [0m[9m[31m<!-- /wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6545782Z 
+2023-12-11T16:44:51.6546246Z       [0m[9m[31m<!-- wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6546710Z       [0m[9m[31m<p>B [39m[29m[0mblock</p>
+2023-12-11T16:44:51.6547092Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6547282Z 
+2023-12-11T16:44:51.6548406Z     Expected: [33m/home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt[39m
+2023-12-11T16:44:51.6551651Z     Received: [33m/home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry1/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt[39m
+2023-12-11T16:44:51.6554398Z 
+2023-12-11T16:44:51.6554412Z 
+2023-12-11T16:44:51.6554833Z       277 | 		await page.keyboard.press( 'ArrowUp' );
+2023-12-11T16:44:51.6555678Z       278 | 		await pageUtils.pressKeys( 'primary+v' );
+2023-12-11T16:44:51.6556600Z     > 279 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+2023-12-11T16:44:51.6557453Z           | 		                                              ^
+2023-12-11T16:44:51.6558009Z       280 | 	} );
+2023-12-11T16:44:51.6558388Z       281 |
+2023-12-11T16:44:51.6559142Z       282 | 	test( 'should copy/paste partial selection with other blocks in-between', async ( {
+2023-12-11T16:44:51.6559836Z 
+2023-12-11T16:44:51.6560427Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:279:49
+2023-12-11T16:44:51.6561017Z 
+2023-12-11T16:44:51.6561666Z     attachment #1: Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-expected.txt (text/plain) 
+2023-12-11T16:44:51.6563034Z     test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt
+2023-12-11T16:44:51.6564134Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6564531Z 
+2023-12-11T16:44:51.6565168Z     attachment #2: Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt (text/plain) 
+2023-12-11T16:44:51.6567180Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry1/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt
+2023-12-11T16:44:51.6568853Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6569231Z 
+2023-12-11T16:44:51.6569702Z     attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6571138Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry1/test-failed-1.png
+2023-12-11T16:44:51.6572454Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6572821Z 
+2023-12-11T16:44:51.6573277Z     attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6574651Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry1/video.webm
+2023-12-11T16:44:51.6575919Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6576711Z 
+2023-12-11T16:44:51.6577525Z     attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6579627Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry1/trace.zip
+2023-12-11T16:44:51.6580621Z     Usage:
+2023-12-11T16:44:51.6580753Z 
+2023-12-11T16:44:51.6581838Z         npx playwright show-trace artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry1/trace.zip
+2023-12-11T16:44:51.6583080Z 
+2023-12-11T16:44:51.6583475Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6583856Z 
+2023-12-11T16:44:51.6584271Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6584822Z 
+2023-12-11T16:44:51.6585056Z     Error: [31mSnapshot comparison failed:[39m
+2023-12-11T16:44:51.6585327Z 
+2023-12-11T16:44:51.6585498Z       [32m<!-- wp:paragraph -->[39m
+2023-12-11T16:44:51.6585853Z       [32m<p>A </p>[39m
+2023-12-11T16:44:51.6586195Z       [32m<!-- /wp:paragraph -->[39m
+2023-12-11T16:44:51.6586428Z 
+2023-12-11T16:44:51.6586591Z       [32m[39m<!-- wp:paragraph -->
+2023-12-11T16:44:51.6586904Z       <p>block</p>
+2023-12-11T16:44:51.6587184Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6587390Z 
+2023-12-11T16:44:51.6587520Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6587801Z       <p>B </p>
+2023-12-11T16:44:51.6588088Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6588283Z 
+2023-12-11T16:44:51.6588410Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6588791Z       <p>[0m[9m[31mA block</p>[39m[29m[0m
+2023-12-11T16:44:51.6589259Z       [0m[9m[31m<!-- /wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6589541Z 
+2023-12-11T16:44:51.6589753Z       [0m[9m[31m<!-- wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6590217Z       [0m[9m[31m<p>B [39m[29m[0mblock</p>
+2023-12-11T16:44:51.6590596Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6590798Z 
+2023-12-11T16:44:51.6591931Z     Expected: [33m/home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt[39m
+2023-12-11T16:44:51.6594867Z     Received: [33m/home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry2/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt[39m
+2023-12-11T16:44:51.6596506Z 
+2023-12-11T16:44:51.6596512Z 
+2023-12-11T16:44:51.6596749Z       277 | 		await page.keyboard.press( 'ArrowUp' );
+2023-12-11T16:44:51.6597276Z       278 | 		await pageUtils.pressKeys( 'primary+v' );
+2023-12-11T16:44:51.6597863Z     > 279 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+2023-12-11T16:44:51.6598419Z           | 		                                              ^
+2023-12-11T16:44:51.6598771Z       280 | 	} );
+2023-12-11T16:44:51.6599003Z       281 |
+2023-12-11T16:44:51.6599561Z       282 | 	test( 'should copy/paste partial selection with other blocks in-between', async ( {
+2023-12-11T16:44:51.6600008Z 
+2023-12-11T16:44:51.6600589Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:279:49
+2023-12-11T16:44:51.6601168Z 
+2023-12-11T16:44:51.6601823Z     attachment #1: Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-expected.txt (text/plain) 
+2023-12-11T16:44:51.6603369Z     test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt
+2023-12-11T16:44:51.6604456Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6604831Z 
+2023-12-11T16:44:51.6605598Z     attachment #2: Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt (text/plain) 
+2023-12-11T16:44:51.6607636Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry2/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt
+2023-12-11T16:44:51.6609307Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6609678Z 
+2023-12-11T16:44:51.6610138Z     attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6611607Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry2/test-failed-1.png
+2023-12-11T16:44:51.6612924Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6613284Z 
+2023-12-11T16:44:51.6613762Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6615144Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry2/trace.zip
+2023-12-11T16:44:51.6618164Z     Usage:
+2023-12-11T16:44:51.6618323Z 
+2023-12-11T16:44:51.6619422Z         npx playwright show-trace artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry2/trace.zip
+2023-12-11T16:44:51.6620448Z 
+2023-12-11T16:44:51.6620826Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6621222Z 
+2023-12-11T16:44:51.6621971Z   2) [chromium] › editor/various/copy-cut-paste.spec.js:282:2 › Copy/cut/paste › should copy/paste partial selection with other blocks in-between 
+2023-12-11T16:44:51.6622666Z 
+2023-12-11T16:44:51.6622884Z     Error: [31mSnapshot comparison failed:[39m
+2023-12-11T16:44:51.6623174Z 
+2023-12-11T16:44:51.6623345Z       [32m<!-- wp:paragraph -->[39m
+2023-12-11T16:44:51.6623743Z       [32m<p>A </p>[39m
+2023-12-11T16:44:51.6624087Z       [32m<!-- /wp:paragraph -->[39m
+2023-12-11T16:44:51.6624321Z 
+2023-12-11T16:44:51.6624484Z       [32m[39m<!-- wp:paragraph -->
+2023-12-11T16:44:51.6624810Z       <p>block</p>
+2023-12-11T16:44:51.6625103Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6625299Z 
+2023-12-11T16:44:51.6625429Z       <!-- wp:spacer -->
+2023-12-11T16:44:51.6625968Z       <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+2023-12-11T16:44:51.6626681Z       <!-- /wp:spacer -->
+2023-12-11T16:44:51.6626863Z 
+2023-12-11T16:44:51.6627000Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6627280Z       <p>B </p>
+2023-12-11T16:44:51.6627561Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6627751Z 
+2023-12-11T16:44:51.6627886Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6628261Z       <p>[0m[9m[31mA block</p>[39m[29m[0m
+2023-12-11T16:44:51.6628875Z       [0m[9m[31m<!-- /wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6629156Z 
+2023-12-11T16:44:51.6629354Z       [0m[9m[31m<!-- wp:spacer -->[39m[29m[0m
+2023-12-11T16:44:51.6630093Z       [0m[9m[31m<div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>[39m[29m[0m
+2023-12-11T16:44:51.6630779Z       [0m[9m[31m<!-- /wp:spacer -->[39m[29m[0m
+2023-12-11T16:44:51.6631049Z 
+2023-12-11T16:44:51.6631264Z       [0m[9m[31m<!-- wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6631725Z       [0m[9m[31m<p>B [39m[29m[0mblock</p>
+2023-12-11T16:44:51.6632107Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6632313Z 
+2023-12-11T16:44:51.6633575Z     Expected: [33m/home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt[39m
+2023-12-11T16:44:51.6636583Z     Received: [33m/home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt[39m
+2023-12-11T16:44:51.6638302Z 
+2023-12-11T16:44:51.6638308Z 
+2023-12-11T16:44:51.6638542Z       311 | 		await page.keyboard.press( 'ArrowUp' );
+2023-12-11T16:44:51.6639066Z       312 | 		await pageUtils.pressKeys( 'primary+v' );
+2023-12-11T16:44:51.6639654Z     > 313 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+2023-12-11T16:44:51.6640205Z           | 		                                              ^
+2023-12-11T16:44:51.6640562Z       314 | 	} );
+2023-12-11T16:44:51.6640797Z       315 |
+2023-12-11T16:44:51.6641250Z       316 | 	test( 'should cut partial selection of text blocks', async ( {
+2023-12-11T16:44:51.6641629Z 
+2023-12-11T16:44:51.6642207Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:313:49
+2023-12-11T16:44:51.6642796Z 
+2023-12-11T16:44:51.6643566Z     attachment #1: Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-expected.txt (text/plain) 
+2023-12-11T16:44:51.6645150Z     test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt
+2023-12-11T16:44:51.6646346Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6646724Z 
+2023-12-11T16:44:51.6647475Z     attachment #2: Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt (text/plain) 
+2023-12-11T16:44:51.6649701Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt
+2023-12-11T16:44:51.6651454Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6651845Z 
+2023-12-11T16:44:51.6652311Z     attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6653728Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium/test-failed-1.png
+2023-12-11T16:44:51.6655022Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6655388Z 
+2023-12-11T16:44:51.6655856Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6658435Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium/trace.zip
+2023-12-11T16:44:51.6660033Z     Usage:
+2023-12-11T16:44:51.6660241Z 
+2023-12-11T16:44:51.6661998Z         npx playwright show-trace artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium/trace.zip
+2023-12-11T16:44:51.6663750Z 
+2023-12-11T16:44:51.6664133Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6664515Z 
+2023-12-11T16:44:51.6664929Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6667898Z 
+2023-12-11T16:44:51.6668233Z     Error: [31mSnapshot comparison failed:[39m
+2023-12-11T16:44:51.6668537Z 
+2023-12-11T16:44:51.6668717Z       [32m<!-- wp:paragraph -->[39m
+2023-12-11T16:44:51.6669157Z       [32m<p>A </p>[39m
+2023-12-11T16:44:51.6669597Z       [32m<!-- /wp:paragraph -->[39m
+2023-12-11T16:44:51.6669840Z 
+2023-12-11T16:44:51.6670008Z       [32m[39m<!-- wp:paragraph -->
+2023-12-11T16:44:51.6670331Z       <p>block</p>
+2023-12-11T16:44:51.6670618Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6670823Z 
+2023-12-11T16:44:51.6670949Z       <!-- wp:spacer -->
+2023-12-11T16:44:51.6671554Z       <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+2023-12-11T16:44:51.6672158Z       <!-- /wp:spacer -->
+2023-12-11T16:44:51.6672432Z 
+2023-12-11T16:44:51.6672661Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6673129Z       <p>B </p>
+2023-12-11T16:44:51.6673588Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6673911Z 
+2023-12-11T16:44:51.6674138Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6674768Z       <p>[0m[9m[31mA block</p>[39m[29m[0m
+2023-12-11T16:44:51.6675561Z       [0m[9m[31m<!-- /wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6676025Z 
+2023-12-11T16:44:51.6676377Z       [0m[9m[31m<!-- wp:spacer -->[39m[29m[0m
+2023-12-11T16:44:51.6677635Z       [0m[9m[31m<div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>[39m[29m[0m
+2023-12-11T16:44:51.6678793Z       [0m[9m[31m<!-- /wp:spacer -->[39m[29m[0m
+2023-12-11T16:44:51.6679247Z 
+2023-12-11T16:44:51.6679610Z       [0m[9m[31m<!-- wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6680397Z       [0m[9m[31m<p>B [39m[29m[0mblock</p>
+2023-12-11T16:44:51.6681036Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6681369Z 
+2023-12-11T16:44:51.6683575Z     Expected: [33m/home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt[39m
+2023-12-11T16:44:51.6689087Z     Received: [33m/home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry1/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt[39m
+2023-12-11T16:44:51.6692341Z 
+2023-12-11T16:44:51.6692352Z 
+2023-12-11T16:44:51.6692745Z       311 | 		await page.keyboard.press( 'ArrowUp' );
+2023-12-11T16:44:51.6693661Z       312 | 		await pageUtils.pressKeys( 'primary+v' );
+2023-12-11T16:44:51.6694652Z     > 313 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+2023-12-11T16:44:51.6695689Z           | 		                                              ^
+2023-12-11T16:44:51.6696444Z       314 | 	} );
+2023-12-11T16:44:51.6696797Z       315 |
+2023-12-11T16:44:51.6697532Z       316 | 	test( 'should cut partial selection of text blocks', async ( {
+2023-12-11T16:44:51.6698187Z 
+2023-12-11T16:44:51.6699214Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:313:49
+2023-12-11T16:44:51.6700259Z 
+2023-12-11T16:44:51.6701589Z     attachment #1: Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-expected.txt (text/plain) 
+2023-12-11T16:44:51.6704379Z     test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt
+2023-12-11T16:44:51.6706526Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6707194Z 
+2023-12-11T16:44:51.6708485Z     attachment #2: Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt (text/plain) 
+2023-12-11T16:44:51.6710915Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry1/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt
+2023-12-11T16:44:51.6713218Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6713878Z 
+2023-12-11T16:44:51.6714712Z     attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6716903Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry1/test-failed-1.png
+2023-12-11T16:44:51.6718324Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6718740Z 
+2023-12-11T16:44:51.6719202Z     attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6720634Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry1/video.webm
+2023-12-11T16:44:51.6721950Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6722324Z 
+2023-12-11T16:44:51.6722786Z     attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6724521Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry1/trace.zip
+2023-12-11T16:44:51.6725550Z     Usage:
+2023-12-11T16:44:51.6725682Z 
+2023-12-11T16:44:51.6726804Z         npx playwright show-trace artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry1/trace.zip
+2023-12-11T16:44:51.6728010Z 
+2023-12-11T16:44:51.6728402Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6728772Z 
+2023-12-11T16:44:51.6729197Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6729579Z 
+2023-12-11T16:44:51.6729801Z     Error: [31mSnapshot comparison failed:[39m
+2023-12-11T16:44:51.6730073Z 
+2023-12-11T16:44:51.6730248Z       [32m<!-- wp:paragraph -->[39m
+2023-12-11T16:44:51.6730605Z       [32m<p>A </p>[39m
+2023-12-11T16:44:51.6730967Z       [32m<!-- /wp:paragraph -->[39m
+2023-12-11T16:44:51.6731201Z 
+2023-12-11T16:44:51.6731373Z       [32m[39m<!-- wp:paragraph -->
+2023-12-11T16:44:51.6731683Z       <p>block</p>
+2023-12-11T16:44:51.6731976Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6732183Z 
+2023-12-11T16:44:51.6732307Z       <!-- wp:spacer -->
+2023-12-11T16:44:51.6732855Z       <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+2023-12-11T16:44:51.6733371Z       <!-- /wp:spacer -->
+2023-12-11T16:44:51.6733560Z 
+2023-12-11T16:44:51.6733692Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6733982Z       <p>B </p>
+2023-12-11T16:44:51.6734265Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6734463Z 
+2023-12-11T16:44:51.6734591Z       <!-- wp:paragraph -->
+2023-12-11T16:44:51.6734972Z       <p>[0m[9m[31mA block</p>[39m[29m[0m
+2023-12-11T16:44:51.6735443Z       [0m[9m[31m<!-- /wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6735717Z 
+2023-12-11T16:44:51.6735922Z       [0m[9m[31m<!-- wp:spacer -->[39m[29m[0m
+2023-12-11T16:44:51.6737189Z       [0m[9m[31m<div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>[39m[29m[0m
+2023-12-11T16:44:51.6737897Z       [0m[9m[31m<!-- /wp:spacer -->[39m[29m[0m
+2023-12-11T16:44:51.6738172Z 
+2023-12-11T16:44:51.6738395Z       [0m[9m[31m<!-- wp:paragraph -->[39m[29m[0m
+2023-12-11T16:44:51.6738874Z       [0m[9m[31m<p>B [39m[29m[0mblock</p>
+2023-12-11T16:44:51.6739262Z       <!-- /wp:paragraph -->
+2023-12-11T16:44:51.6739456Z 
+2023-12-11T16:44:51.6740717Z     Expected: [33m/home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt[39m
+2023-12-11T16:44:51.6743795Z     Received: [33m/home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry2/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt[39m
+2023-12-11T16:44:51.6745806Z 
+2023-12-11T16:44:51.6745838Z 
+2023-12-11T16:44:51.6746243Z       311 | 		await page.keyboard.press( 'ArrowUp' );
+2023-12-11T16:44:51.6747144Z       312 | 		await pageUtils.pressKeys( 'primary+v' );
+2023-12-11T16:44:51.6748016Z     > 313 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+2023-12-11T16:44:51.6748609Z           | 		                                              ^
+2023-12-11T16:44:51.6748966Z       314 | 	} );
+2023-12-11T16:44:51.6749205Z       315 |
+2023-12-11T16:44:51.6749672Z       316 | 	test( 'should cut partial selection of text blocks', async ( {
+2023-12-11T16:44:51.6750033Z 
+2023-12-11T16:44:51.6750618Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:313:49
+2023-12-11T16:44:51.6751231Z 
+2023-12-11T16:44:51.6751995Z     attachment #1: Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-expected.txt (text/plain) 
+2023-12-11T16:44:51.6753589Z     test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt
+2023-12-11T16:44:51.6754794Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6755368Z 
+2023-12-11T16:44:51.6756138Z     attachment #2: Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt (text/plain) 
+2023-12-11T16:44:51.6758414Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry2/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt
+2023-12-11T16:44:51.6760242Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6760598Z 
+2023-12-11T16:44:51.6761080Z     attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6762571Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry2/test-failed-1.png
+2023-12-11T16:44:51.6763917Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6764285Z 
+2023-12-11T16:44:51.6764766Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6766180Z     artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry2/trace.zip
+2023-12-11T16:44:51.6767196Z     Usage:
+2023-12-11T16:44:51.6767327Z 
+2023-12-11T16:44:51.6768457Z         npx playwright show-trace artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry2/trace.zip
+2023-12-11T16:44:51.6769638Z 
+2023-12-11T16:44:51.6770026Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6770409Z 
+2023-12-11T16:44:51.6771492Z   3) [chromium] › editor/various/multi-block-selection.spec.js:153:2 › Multi-block selection › should select and deselect with shift and arrow keys 
+2023-12-11T16:44:51.6772767Z 
+2023-12-11T16:44:51.6773131Z     [31mTest timeout of 100000ms exceeded.[39m
+2023-12-11T16:44:51.6773572Z 
+2023-12-11T16:44:51.6774415Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6776621Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium/test-failed-1.png
+2023-12-11T16:44:51.6778430Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6779130Z 
+2023-12-11T16:44:51.6779962Z     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6782226Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium/trace.zip
+2023-12-11T16:44:51.6783787Z     Usage:
+2023-12-11T16:44:51.6784005Z 
+2023-12-11T16:44:51.6785588Z         npx playwright show-trace artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium/trace.zip
+2023-12-11T16:44:51.6786858Z 
+2023-12-11T16:44:51.6787270Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6787646Z 
+2023-12-11T16:44:51.6788058Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6788451Z 
+2023-12-11T16:44:51.6788661Z     [31mTest timeout of 100000ms exceeded.[39m
+2023-12-11T16:44:51.6788933Z 
+2023-12-11T16:44:51.6789263Z     Error: locator.evaluateHandle: Target page, context or browser has been closed
+2023-12-11T16:44:51.6789703Z 
+2023-12-11T16:44:51.6789795Z     Call Log:
+2023-12-11T16:44:51.6790114Z     - Test timeout of 100000ms exceeded
+2023-12-11T16:44:51.6790356Z 
+2023-12-11T16:44:51.6790442Z       186 |
+2023-12-11T16:44:51.6790827Z       187 | 		await page.keyboard.press( 'Shift+ArrowUp' );
+2023-12-11T16:44:51.6791498Z     > 188 | 		await expect( multiBlockSelectionUtils.assertNativeSelection ).toPass();
+2023-12-11T16:44:51.6792123Z           | 		                                                               ^
+2023-12-11T16:44:51.6792506Z       189 | 		await expect
+2023-12-11T16:44:51.6792961Z       190 | 			.poll( multiBlockSelectionUtils.getSelectedFlatIndices )
+2023-12-11T16:44:51.6793457Z       191 | 			.toEqual( [ 3 ] );
+2023-12-11T16:44:51.6793667Z 
+2023-12-11T16:44:51.6794310Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/multi-block-selection.spec.js:188:66
+2023-12-11T16:44:51.6794934Z 
+2023-12-11T16:44:51.6795598Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6797097Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium-retry1/test-failed-1.png
+2023-12-11T16:44:51.6798446Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6798806Z 
+2023-12-11T16:44:51.6799274Z     attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6800700Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium-retry1/video.webm
+2023-12-11T16:44:51.6802026Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6802383Z 
+2023-12-11T16:44:51.6802859Z     attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6804284Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium-retry1/trace.zip
+2023-12-11T16:44:51.6805301Z     Usage:
+2023-12-11T16:44:51.6805433Z 
+2023-12-11T16:44:51.6806548Z         npx playwright show-trace artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium-retry1/trace.zip
+2023-12-11T16:44:51.6807726Z 
+2023-12-11T16:44:51.6808120Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6808474Z 
+2023-12-11T16:44:51.6808890Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6809287Z 
+2023-12-11T16:44:51.6809505Z     [31mTest timeout of 100000ms exceeded.[39m
+2023-12-11T16:44:51.6809775Z 
+2023-12-11T16:44:51.6810244Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6811737Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium-retry2/test-failed-1.png
+2023-12-11T16:44:51.6813317Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6813972Z 
+2023-12-11T16:44:51.6814687Z     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6816568Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium-retry2/trace.zip
+2023-12-11T16:44:51.6817639Z     Usage:
+2023-12-11T16:44:51.6817775Z 
+2023-12-11T16:44:51.6818942Z         npx playwright show-trace artifacts/test-results/editor-various-multi-block-selection-Multi-blo-39a7e-d-select-and-deselect-with-shift-and-arrow-keys-chromium-retry2/trace.zip
+2023-12-11T16:44:51.6820232Z 
+2023-12-11T16:44:51.6820630Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6821006Z 
+2023-12-11T16:44:51.6822022Z   4) [chromium] › editor/various/multi-block-selection.spec.js:290:2 › Multi-block selection › should properly select a single block even if `shift` was held for the selection 
+2023-12-11T16:44:51.6822992Z 
+2023-12-11T16:44:51.6823471Z     Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoMatchObject[2m([22m[32mexpected[39m[2m)[22m
+2023-12-11T16:44:51.6823990Z 
+2023-12-11T16:44:51.6824138Z     [32m- Expected  - 1[39m
+2023-12-11T16:44:51.6824474Z     [31m+ Received  + 1[39m
+2023-12-11T16:44:51.6824670Z 
+2023-12-11T16:44:51.6824799Z     [2m  Array [[22m
+2023-12-11T16:44:51.6825097Z     [2m    Object {[22m
+2023-12-11T16:44:51.6825450Z     [2m      "attributes": Object {[22m
+2023-12-11T16:44:51.6825891Z     [32m-       "content": "new content",[39m
+2023-12-11T16:44:51.6826370Z     [31m+       "content": "new contenttest",[39m
+2023-12-11T16:44:51.6826762Z     [2m      },[22m
+2023-12-11T16:44:51.6827112Z     [2m      "name": "core/paragraph",[22m
+2023-12-11T16:44:51.6827480Z     [2m    },[22m
+2023-12-11T16:44:51.6827744Z     [2m  ][22m
+2023-12-11T16:44:51.6827898Z 
+2023-12-11T16:44:51.6827996Z     Call Log:
+2023-12-11T16:44:51.6828399Z     - Timeout 5000ms exceeded while waiting on the predicate
+2023-12-11T16:44:51.6828720Z 
+2023-12-11T16:44:51.6828964Z       312 | 		await page.keyboard.type( 'new content' );
+2023-12-11T16:44:51.6829343Z       313 |
+2023-12-11T16:44:51.6829726Z     > 314 | 		await expect.poll( editor.getBlocks ).toMatchObject( [
+2023-12-11T16:44:51.6830262Z           | 		                                      ^
+2023-12-11T16:44:51.6830841Z       315 | 			{
+2023-12-11T16:44:51.6831388Z       316 | 				name: 'core/paragraph',
+2023-12-11T16:44:51.6831884Z       317 | 				attributes: { content: 'new content' },
+2023-12-11T16:44:51.6832257Z 
+2023-12-11T16:44:51.6832933Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/multi-block-selection.spec.js:314:41
+2023-12-11T16:44:51.6833562Z 
+2023-12-11T16:44:51.6834042Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6835478Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium/test-failed-1.png
+2023-12-11T16:44:51.6836790Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6837160Z 
+2023-12-11T16:44:51.6837652Z     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6838998Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium/trace.zip
+2023-12-11T16:44:51.6839958Z     Usage:
+2023-12-11T16:44:51.6840089Z 
+2023-12-11T16:44:51.6842258Z         npx playwright show-trace artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium/trace.zip
+2023-12-11T16:44:51.6843297Z 
+2023-12-11T16:44:51.6843720Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6844126Z 
+2023-12-11T16:44:51.6844557Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6844979Z 
+2023-12-11T16:44:51.6845594Z     Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoMatchObject[2m([22m[32mexpected[39m[2m)[22m
+2023-12-11T16:44:51.6846372Z 
+2023-12-11T16:44:51.6846640Z     [32m- Expected  - 1[39m
+2023-12-11T16:44:51.6847237Z     [31m+ Received  + 1[39m
+2023-12-11T16:44:51.6847581Z 
+2023-12-11T16:44:51.6847798Z     [2m  Array [[22m
+2023-12-11T16:44:51.6848267Z     [2m    Object {[22m
+2023-12-11T16:44:51.6848641Z     [2m      "attributes": Object {[22m
+2023-12-11T16:44:51.6849092Z     [32m-       "content": "new content",[39m
+2023-12-11T16:44:51.6849556Z     [31m+       "content": "new contenttest",[39m
+2023-12-11T16:44:51.6849942Z     [2m      },[22m
+2023-12-11T16:44:51.6850292Z     [2m      "name": "core/paragraph",[22m
+2023-12-11T16:44:51.6850664Z     [2m    },[22m
+2023-12-11T16:44:51.6851120Z     [2m  ][22m
+2023-12-11T16:44:51.6851277Z 
+2023-12-11T16:44:51.6851370Z     Call Log:
+2023-12-11T16:44:51.6851779Z     - Timeout 5000ms exceeded while waiting on the predicate
+2023-12-11T16:44:51.6852101Z 
+2023-12-11T16:44:51.6852343Z       312 | 		await page.keyboard.type( 'new content' );
+2023-12-11T16:44:51.6852726Z       313 |
+2023-12-11T16:44:51.6853107Z     > 314 | 		await expect.poll( editor.getBlocks ).toMatchObject( [
+2023-12-11T16:44:51.6853600Z           | 		                                      ^
+2023-12-11T16:44:51.6853945Z       315 | 			{
+2023-12-11T16:44:51.6854265Z       316 | 				name: 'core/paragraph',
+2023-12-11T16:44:51.6854738Z       317 | 				attributes: { content: 'new content' },
+2023-12-11T16:44:51.6855024Z 
+2023-12-11T16:44:51.6855669Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/multi-block-selection.spec.js:314:41
+2023-12-11T16:44:51.6856564Z 
+2023-12-11T16:44:51.6857063Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6858561Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium-retry1/test-failed-1.png
+2023-12-11T16:44:51.6859928Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6860294Z 
+2023-12-11T16:44:51.6860761Z     attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6862173Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium-retry1/video.webm
+2023-12-11T16:44:51.6863506Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6863856Z 
+2023-12-11T16:44:51.6864343Z     attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6865756Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium-retry1/trace.zip
+2023-12-11T16:44:51.6866792Z     Usage:
+2023-12-11T16:44:51.6866929Z 
+2023-12-11T16:44:51.6868057Z         npx playwright show-trace artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium-retry1/trace.zip
+2023-12-11T16:44:51.6869097Z 
+2023-12-11T16:44:51.6869483Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6869831Z 
+2023-12-11T16:44:51.6870429Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6870814Z 
+2023-12-11T16:44:51.6871285Z     Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoMatchObject[2m([22m[32mexpected[39m[2m)[22m
+2023-12-11T16:44:51.6871754Z 
+2023-12-11T16:44:51.6871896Z     [32m- Expected  - 1[39m
+2023-12-11T16:44:51.6872399Z     [31m+ Received  + 1[39m
+2023-12-11T16:44:51.6872597Z 
+2023-12-11T16:44:51.6872728Z     [2m  Array [[22m
+2023-12-11T16:44:51.6873026Z     [2m    Object {[22m
+2023-12-11T16:44:51.6873385Z     [2m      "attributes": Object {[22m
+2023-12-11T16:44:51.6873830Z     [32m-       "content": "new content",[39m
+2023-12-11T16:44:51.6874295Z     [31m+       "content": "new contenttest",[39m
+2023-12-11T16:44:51.6874676Z     [2m      },[22m
+2023-12-11T16:44:51.6875027Z     [2m      "name": "core/paragraph",[22m
+2023-12-11T16:44:51.6875395Z     [2m    },[22m
+2023-12-11T16:44:51.6875660Z     [2m  ][22m
+2023-12-11T16:44:51.6875826Z 
+2023-12-11T16:44:51.6875916Z     Call Log:
+2023-12-11T16:44:51.6876315Z     - Timeout 5000ms exceeded while waiting on the predicate
+2023-12-11T16:44:51.6876635Z 
+2023-12-11T16:44:51.6876879Z       312 | 		await page.keyboard.type( 'new content' );
+2023-12-11T16:44:51.6877260Z       313 |
+2023-12-11T16:44:51.6877636Z     > 314 | 		await expect.poll( editor.getBlocks ).toMatchObject( [
+2023-12-11T16:44:51.6878138Z           | 		                                      ^
+2023-12-11T16:44:51.6878478Z       315 | 			{
+2023-12-11T16:44:51.6878804Z       316 | 				name: 'core/paragraph',
+2023-12-11T16:44:51.6879270Z       317 | 				attributes: { content: 'new content' },
+2023-12-11T16:44:51.6879554Z 
+2023-12-11T16:44:51.6880198Z         at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/multi-block-selection.spec.js:314:41
+2023-12-11T16:44:51.6880823Z 
+2023-12-11T16:44:51.6881311Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6882814Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium-retry2/test-failed-1.png
+2023-12-11T16:44:51.6884176Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6884550Z 
+2023-12-11T16:44:51.6885029Z     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6886472Z     artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium-retry2/trace.zip
+2023-12-11T16:44:51.6887488Z     Usage:
+2023-12-11T16:44:51.6887619Z 
+2023-12-11T16:44:51.6888732Z         npx playwright show-trace artifacts/test-results/editor-various-multi-block-selection-Multi-blo-7f7f3--block-even-if-shift-was-held-for-the-selection-chromium-retry2/trace.zip
+2023-12-11T16:44:51.6889776Z 
+2023-12-11T16:44:51.6890161Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2023-12-11T16:44:51.6890653Z 
+2023-12-11T16:44:51.6890748Z   4 failed
+2023-12-11T16:44:51.6891537Z     [chromium] › editor/various/copy-cut-paste.spec.js:249:2 › Copy/cut/paste › should copy only partial selection of text blocks 
+2023-12-11T16:44:51.6892863Z     [chromium] › editor/various/copy-cut-paste.spec.js:282:2 › Copy/cut/paste › should copy/paste partial selection with other blocks in-between 
+2023-12-11T16:44:51.6894385Z     [chromium] › editor/various/multi-block-selection.spec.js:153:2 › Multi-block selection › should select and deselect with shift and arrow keys 
+2023-12-11T16:44:51.6895944Z     [chromium] › editor/various/multi-block-selection.spec.js:290:2 › Multi-block selection › should properly select a single block even if `shift` was held for the selection 
+2023-12-11T16:44:51.6897136Z   130 passed (12.9m)
+2023-12-11T16:44:51.6935320Z ##[error]  1) [chromium] › editor/various/copy-cut-paste.spec.js:249:2 › Copy/cut/paste › should copy only partial selection of text blocks 
+    Error: Snapshot comparison failed:
+
+      <!-- wp:paragraph -->
+      <p>A </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>B </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>A block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>B block</p>
+      <!-- /wp:paragraph -->
+
+    Expected: /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt
+    Received: /home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt
+
+
+      277 | 		await page.keyboard.press( 'ArrowUp' );
+      278 | 		await pageUtils.pressKeys( 'primary+v' );
+    > 279 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+          | 		                                              ^
+      280 | 	} );
+      281 |
+      282 | 	test( 'should copy/paste partial selection with other blocks in-between', async ( {
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:279:49
+2023-12-11T16:44:51.6962015Z ##[error]  1) [chromium] › editor/various/copy-cut-paste.spec.js:249:2 › Copy/cut/paste › should copy only partial selection of text blocks 
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: Snapshot comparison failed:
+
+      <!-- wp:paragraph -->
+      <p>A </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>B </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>A block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>B block</p>
+      <!-- /wp:paragraph -->
+
+    Expected: /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt
+    Received: /home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry1/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt
+
+
+      277 | 		await page.keyboard.press( 'ArrowUp' );
+      278 | 		await pageUtils.pressKeys( 'primary+v' );
+    > 279 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+          | 		                                              ^
+      280 | 	} );
+      281 |
+      282 | 	test( 'should copy/paste partial selection with other blocks in-between', async ( {
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:279:49
+2023-12-11T16:44:51.6981483Z ##[error]  1) [chromium] › editor/various/copy-cut-paste.spec.js:249:2 › Copy/cut/paste › should copy only partial selection of text blocks 
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: Snapshot comparison failed:
+
+      <!-- wp:paragraph -->
+      <p>A </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>B </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>A block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>B block</p>
+      <!-- /wp:paragraph -->
+
+    Expected: /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-chromium.txt
+    Received: /home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-chromium-retry2/Copy-cut-paste-should-copy-only-partial-selection-of-text-blocks-2-actual.txt
+
+
+      277 | 		await page.keyboard.press( 'ArrowUp' );
+      278 | 		await pageUtils.pressKeys( 'primary+v' );
+    > 279 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+          | 		                                              ^
+      280 | 	} );
+      281 |
+      282 | 	test( 'should copy/paste partial selection with other blocks in-between', async ( {
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:279:49
+2023-12-11T16:44:51.7002144Z ##[error]  2) [chromium] › editor/various/copy-cut-paste.spec.js:282:2 › Copy/cut/paste › should copy/paste partial selection with other blocks in-between 
+    Error: Snapshot comparison failed:
+
+      <!-- wp:paragraph -->
+      <p>A </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:spacer -->
+      <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+      <!-- /wp:spacer -->
+
+      <!-- wp:paragraph -->
+      <p>B </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>A block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:spacer -->
+      <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+      <!-- /wp:spacer -->
+
+      <!-- wp:paragraph -->
+      <p>B block</p>
+      <!-- /wp:paragraph -->
+
+    Expected: /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt
+    Received: /home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt
+
+
+      311 | 		await page.keyboard.press( 'ArrowUp' );
+      312 | 		await pageUtils.pressKeys( 'primary+v' );
+    > 313 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+          | 		                                              ^
+      314 | 	} );
+      315 |
+      316 | 	test( 'should cut partial selection of text blocks', async ( {
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:313:49
+2023-12-11T16:44:51.7024732Z ##[error]  2) [chromium] › editor/various/copy-cut-paste.spec.js:282:2 › Copy/cut/paste › should copy/paste partial selection with other blocks in-between 
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: Snapshot comparison failed:
+
+      <!-- wp:paragraph -->
+      <p>A </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:spacer -->
+      <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+      <!-- /wp:spacer -->
+
+      <!-- wp:paragraph -->
+      <p>B </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>A block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:spacer -->
+      <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+      <!-- /wp:spacer -->
+
+      <!-- wp:paragraph -->
+      <p>B block</p>
+      <!-- /wp:paragraph -->
+
+    Expected: /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt
+    Received: /home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry1/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt
+
+
+      311 | 		await page.keyboard.press( 'ArrowUp' );
+      312 | 		await pageUtils.pressKeys( 'primary+v' );
+    > 313 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+          | 		                                              ^
+      314 | 	} );
+      315 |
+      316 | 	test( 'should cut partial selection of text blocks', async ( {
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:313:49
+2023-12-11T16:44:51.7046898Z ##[error]  2) [chromium] › editor/various/copy-cut-paste.spec.js:282:2 › Copy/cut/paste › should copy/paste partial selection with other blocks in-between 
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: Snapshot comparison failed:
+
+      <!-- wp:paragraph -->
+      <p>A </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:spacer -->
+      <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+      <!-- /wp:spacer -->
+
+      <!-- wp:paragraph -->
+      <p>B </p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:paragraph -->
+      <p>A block</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:spacer -->
+      <div style="height:100px" aria-hidden="true" class="wp-block-spacer"></div>
+      <!-- /wp:spacer -->
+
+      <!-- wp:paragraph -->
+      <p>B block</p>
+      <!-- /wp:paragraph -->
+
+    Expected: /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/__snapshots__/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-chromium.txt
+    Received: /home/runner/work/gutenberg/gutenberg/artifacts/test-results/editor-various-copy-cut-paste-Copy-cut-paste-s-3bb90--partial-selection-with-other-blocks-in-between-chromium-retry2/Copy-cut-paste-should-copy-paste-partial-selection-with-other-blocks-in-between-2-actual.txt
+
+
+      311 | 		await page.keyboard.press( 'ArrowUp' );
+      312 | 		await pageUtils.pressKeys( 'primary+v' );
+    > 313 | 		expect( await editor.getEditedPostContent() ).toMatchSnapshot();
+          | 		                                              ^
+      314 | 	} );
+      315 |
+      316 | 	test( 'should cut partial selection of text blocks', async ( {
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/copy-cut-paste.spec.js:313:49
+2023-12-11T16:44:51.7056867Z ##[error]  3) [chromium] › editor/various/multi-block-selection.spec.js:153:2 › Multi-block selection › should select and deselect with shift and arrow keys 
+    Test timeout of 100000ms exceeded.
+2023-12-11T16:44:51.7060664Z ##[error]  3) [chromium] › editor/various/multi-block-selection.spec.js:153:2 › Multi-block selection › should select and deselect with shift and arrow keys 
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Test timeout of 100000ms exceeded.
+2023-12-11T16:44:51.7068739Z ##[error]  3) [chromium] › editor/various/multi-block-selection.spec.js:153:2 › Multi-block selection › should select and deselect with shift and arrow keys 
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: locator.evaluateHandle: Target page, context or browser has been closed
+
+    Call Log:
+    - Test timeout of 100000ms exceeded
+
+      186 |
+      187 | 		await page.keyboard.press( 'Shift+ArrowUp' );
+    > 188 | 		await expect( multiBlockSelectionUtils.assertNativeSelection ).toPass();
+          | 		                                                               ^
+      189 | 		await expect
+      190 | 			.poll( multiBlockSelectionUtils.getSelectedFlatIndices )
+      191 | 			.toEqual( [ 3 ] );
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/multi-block-selection.spec.js:188:66
+2023-12-11T16:44:51.7074486Z ##[error]  3) [chromium] › editor/various/multi-block-selection.spec.js:153:2 › Multi-block selection › should select and deselect with shift and arrow keys 
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+    Test timeout of 100000ms exceeded.
+2023-12-11T16:44:51.7082973Z ##[error]  4) [chromium] › editor/various/multi-block-selection.spec.js:290:2 › Multi-block selection › should properly select a single block even if `shift` was held for the selection 
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        Object {
+          "attributes": Object {
+    -       "content": "new content",
+    +       "content": "new contenttest",
+          },
+          "name": "core/paragraph",
+        },
+      ]
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      312 | 		await page.keyboard.type( 'new content' );
+      313 |
+    > 314 | 		await expect.poll( editor.getBlocks ).toMatchObject( [
+          | 		                                      ^
+      315 | 			{
+      316 | 				name: 'core/paragraph',
+      317 | 				attributes: { content: 'new content' },
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/multi-block-selection.spec.js:314:41
+2023-12-11T16:44:51.7093799Z ##[error]  4) [chromium] › editor/various/multi-block-selection.spec.js:290:2 › Multi-block selection › should properly select a single block even if `shift` was held for the selection 
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        Object {
+          "attributes": Object {
+    -       "content": "new content",
+    +       "content": "new contenttest",
+          },
+          "name": "core/paragraph",
+        },
+      ]
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      312 | 		await page.keyboard.type( 'new content' );
+      313 |
+    > 314 | 		await expect.poll( editor.getBlocks ).toMatchObject( [
+          | 		                                      ^
+      315 | 			{
+      316 | 				name: 'core/paragraph',
+      317 | 				attributes: { content: 'new content' },
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/multi-block-selection.spec.js:314:41
+2023-12-11T16:44:51.7105771Z ##[error]  4) [chromium] › editor/various/multi-block-selection.spec.js:290:2 › Multi-block selection › should properly select a single block even if `shift` was held for the selection 
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        Object {
+          "attributes": Object {
+    -       "content": "new content",
+    +       "content": "new contenttest",
+          },
+          "name": "core/paragraph",
+        },
+      ]
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      312 | 		await page.keyboard.type( 'new content' );
+      313 |
+    > 314 | 		await expect.poll( editor.getBlocks ).toMatchObject( [
+          | 		                                      ^
+      315 | 			{
+      316 | 				name: 'core/paragraph',
+      317 | 				attributes: { content: 'new content' },
+
+        at /home/runner/work/gutenberg/gutenberg/test/e2e/specs/editor/various/multi-block-selection.spec.js:314:41
+2023-12-11T16:44:51.7117405Z ##[notice]  4 failed
+    [chromium] › editor/various/copy-cut-paste.spec.js:249:2 › Copy/cut/paste › should copy only partial selection of text blocks 
+    [chromium] › editor/various/copy-cut-paste.spec.js:282:2 › Copy/cut/paste › should copy/paste partial selection with other blocks in-between 
+    [chromium] › editor/various/multi-block-selection.spec.js:153:2 › Multi-block selection › should select and deselect with shift and arrow keys 
+    [chromium] › editor/various/multi-block-selection.spec.js:290:2 › Multi-block selection › should properly select a single block even if `shift` was held for the selection 
+  130 passed (12.9m)
+2023-12-11T16:44:51.7122718Z ##[error]Process completed with exit code 1.
