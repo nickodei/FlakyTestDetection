@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using WebAPI.LogParsing.Parsers;
+using Application.LogParsers.Parsers;
 
 namespace UnitTests.Playwright;
 

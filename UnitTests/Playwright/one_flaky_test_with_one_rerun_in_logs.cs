@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using WebAPI.LogParsing.Models;
-using WebAPI.LogParsing.Parsers;
+﻿using Application.LogParsers.Models;
+using FluentAssertions;
+using Application.LogParsers.Parsers;
 
 namespace UnitTests.Playwright;
 

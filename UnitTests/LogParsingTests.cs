@@ -1,5 +1,5 @@
 using FluentAssertions;
-using WebAPI.Utility;
+using Application.Utility;
 
 namespace UnitTests;
 
