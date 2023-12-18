@@ -7,6 +7,8 @@ namespace Application.Infrastructure;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public DbSet<Repository> Repositories { get; set; }
+    public DbSet<Workflow> Workflows { get; set; }
+    public DbSet<Job> Jobs { get; set; }
     public DbSet<WorkflowRun> WorkflowRuns { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

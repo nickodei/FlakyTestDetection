@@ -1,8 +1,8 @@
 ﻿using Application.Features.Github.Models;
 
-namespace Application.Features.Github.Responses;
+namespace Application.Features.Github.Clients.Responses;
 
-public class GetWorkflowRunsResponse
+public class WorkflowRunResult
 {
     public int TotalCount { get; set; }
     public List<WorkflowRunVm> WorkflowRuns { get; set; }

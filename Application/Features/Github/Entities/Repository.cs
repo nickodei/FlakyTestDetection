@@ -2,8 +2,10 @@
 
 public class Repository
 {
-    public int Id { get; set; }
+    public long RepositoryId { get; set; }
     public required string Owner { get; set; }
     public required string Name { get; set; }
-    public ICollection<WorkflowRun> WorkflowRuns { get; } = new List<WorkflowRun>();
+    public required string FullName { get; set; }
+
+    public ICollection<Workflow> Workflows { get; set; } = [];
 }

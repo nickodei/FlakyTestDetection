@@ -9,7 +9,7 @@
 
 <h3>Scraper</h3>
 
-<div Class="rz-p-0 rz-p-md-12">
+<div Class="rz-p-0 rz-p-md-8">
     <RadzenTemplateForm TItem="ScrapingRequest" Data="model" Submit="OnSubmit">
         <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Class="rz-p-sm-12">
             <RadzenFormField Text="Owner" >
@@ -28,7 +28,7 @@
                     <RadzenRequiredValidator Component="Repository" Text="Repository is required." />
                 </Helper>
             </RadzenFormField>
-            <RadzenFormField Text="Workflow Name (yml)">
+            <RadzenFormField Text="Workflow Name">
                 <ChildContent>
                     <RadzenTextBox Name="WorkflowName" @bind-Value="model.WorkflowName" />
                 </ChildContent>
@@ -36,12 +36,12 @@
                     <RadzenRequiredValidator Component="WorkflowName" Text="Name of Workflow is required." />
                 </Helper>
             </RadzenFormField>
-            <RadzenFormField Text="Log-File Path">
+            <RadzenFormField Text="Job">
                 <ChildContent>
-                    <RadzenTextBox Name="LogFilePath" @bind-Value="model.LogFilePath" />
+                    <RadzenTextBox Name="Job" @bind-Value="model.Job" />
                 </ChildContent>
                 <Helper>
-                    <RadzenRequiredValidator Component="LogFilePath" Text="LogFilePath is required." />
+                    <RadzenRequiredValidator Component="Job" Text="Job is required." />
                 </Helper>
             </RadzenFormField>
             <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" ></RadzenButton>
@@ -59,8 +59,9 @@
     {
         Owner = "WordPress",
         Repository = "gutenberg",
-        WorkflowName = "end2end-test.yml",
-        LogFilePath = "Playwright - 7/7_Run the tests.txt"
+        WorkflowName = "End-to-End Tests",
+        LogFilePath = "Playwright - 7/7_Run the tests.txt",
+        Job = "Playwright - 7"
     };
     
     protected override async Task OnInitializedAsync()

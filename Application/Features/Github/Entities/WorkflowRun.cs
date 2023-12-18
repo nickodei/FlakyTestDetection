@@ -2,12 +2,12 @@
 
 public class WorkflowRun
 {
-    public int Id { get; set; }
     public long WorkflowRunId { get; set; }
-    public required string WorkflowName { get; set; }
+    public required long WorkflowId { get; set; }
+    public required string Name { get; set; }
+    public required string Status { get; set; }
+    public required DateTime CreatedAt { get; set; }
     
-    public int RepositoryId { get; set; }
-    public Repository Repository { get; set; } = null!;
-
-    public string GetRepositoryName => $"{Repository?.Owner}/{Repository?.Name}";
+    public Workflow? Workflow { get; set; }
+    public ICollection<Job> Jobs { get; set; } = [];
 }

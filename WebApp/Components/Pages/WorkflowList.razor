@@ -1,4 +1,4 @@
-﻿@page "/RepositoryList"
+﻿@page "/WorkflowList"
 @using Microsoft.EntityFrameworkCore
 @using Application.Infrastructure
 @using Application.Features.Github.Entities
@@ -7,22 +7,22 @@
 @implements IDisposable
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 
-<h3>Repositories</h3>
-<RadzenDataGrid Data="repositories">
+<h3>Workflows</h3>
+<RadzenDataGrid Data="workflows">
     <Columns>
-        <RadzenDataGridColumn TItem="Repository" Property="RepositoryId" Title="Id"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Repository" Property="Owner" Title="Owner"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Repository" Property="Name" Title="Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Workflow" Property="WorkflowId" Title="Id"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Workflow" Property="RepositoryId" Title="Repository Id"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Workflow" Property="Name" Title="Name"></RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
 @code {
     private ApplicationDbContext? dbContext;
-    private IEnumerable<Repository> repositories = [];
+    private IEnumerable<Workflow> workflows = [];
 
     protected override Task OnInitializedAsync()
     {
         dbContext = DbFactory.CreateDbContext();
-        repositories = dbContext.Repositories.ToList();
+        workflows = dbContext.Workflows.ToList();
 
         return base.OnInitializedAsync();
     }

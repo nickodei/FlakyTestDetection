@@ -15,9 +15,12 @@
         <RadzenButton Text="Delete Workflow-Runs" Click="DeleteAllWorkflowRuns"  />
     </HeaderTemplate>
     <Columns>
-        <RadzenDataGridColumn TItem="WorkflowRun" Property="Id" Title="Id"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="WorkflowRun" Property="WorkflowRunId" Title="WorkflowRun Id"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="WorkflowRun" Property="WorkflowName" Title="Workflow Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="WorkflowRunId" Title="Workflow Id"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="Workflow.Repository.FullName" Title="Repository"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="Workflow.Name" Title="Workflow"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="Name" Title="Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="Status" Title="Status"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="CreatedAt" Title="Created at"></RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
 @code {
@@ -27,7 +30,10 @@
     protected override Task OnInitializedAsync()
     {
         dbContext = DbFactory.CreateDbContext();
-        workflowRuns = dbContext.WorkflowRuns.ToList();
+        workflowRuns = dbContext.WorkflowRuns
+            .Include(x => x.Workflow)
+            .ThenInclude(x => x.Repository)
+            .ToList();
 
         return base.OnInitializedAsync();
     }

@@ -8,9 +8,9 @@ public class WorkflowRunEntityTypeConfiguration : IEntityTypeConfiguration<Workf
 {
     public void Configure(EntityTypeBuilder<WorkflowRun> builder)
     {
-        builder.HasOne(e => e.Repository)
-            .WithMany(e => e.WorkflowRuns)
-            .HasForeignKey(e => e.RepositoryId)
-            .IsRequired();
+        //builder.HasOne(e => e.GithubRepository)
+        //    .WithMany(e => e.WorkflowRuns)
+        //    .HasForeignKey(e => e.RepositoryId)
+        //    .IsRequired();
     }
 }
