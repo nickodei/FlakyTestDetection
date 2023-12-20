@@ -1,4 +1,5 @@
 ﻿using Application.Features.Github.Entities;
+using Application.Features.Tests.Entities;
 using Application.Infrastructure.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Job> Jobs { get; set; }
     public DbSet<WorkflowRun> WorkflowRuns { get; set; }
 
+    public DbSet<TestSuite> TestSuites { get; set; } 
+    public DbSet<Test> Tests { get; set; } 
+    public DbSet<TestAttempt> TestAttempts { get; set; } 
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new WorkflowRunEntityTypeConfiguration());

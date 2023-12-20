@@ -1,0 +1,49 @@
+﻿@page "/TestSuiteList"
+@rendermode InteractiveServer
+
+@using Microsoft.EntityFrameworkCore
+@using Application.Infrastructure
+@using Application.Features.Tests.Entities
+
+@implements IDisposable
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h3>Test-Suite</h3>
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="testSuites" TItem="TestSuite" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <HeaderTemplate>
+        <RadzenButton Text="Delete Test-Suites" Click="DeleteAllTestSuites" />
+    </HeaderTemplate>
+    <Columns>
+        <RadzenDataGridColumn TItem="TestSuite" Property="JobId" Title="Job Id"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="TestSuite" Property="CountPassedTests" Title="Passed Tests"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="TestSuite" Property="CountFailedTests" Title="Failed Tests"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="TestSuite" Property="CountFlakyTests" Title="Flaky Tests"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="TestSuite" Property="CountSkippedTests" Title="Skipped Tests"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    private ApplicationDbContext? dbContext;
+    private IEnumerable<TestSuite> testSuites = [];
+
+    protected override Task OnInitializedAsync()
+    {
+        dbContext = DbFactory.CreateDbContext();
+        testSuites = dbContext.TestSuites.ToList();
+
+        return base.OnInitializedAsync();
+    }
+
+    private void DeleteAllTestSuites()
+    {
+        dbContext?.TestSuites.RemoveRange(dbContext.TestSuites);
+        dbContext?.SaveChanges();
+        testSuites = [];
+    }
+
+    public void Dispose()
+    {
+        dbContext?.Dispose();
+    }
+}

@@ -1,4 +1,5 @@
-﻿using Application.LogParsers.Models;
+﻿using Application.Features.Tests.Entities;
+using Application.LogParsers.Models;
 using FluentAssertions;
 using Application.LogParsers.Parsers;
 

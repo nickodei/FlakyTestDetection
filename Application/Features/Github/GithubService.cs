@@ -30,11 +30,12 @@ public class GithubService(IGithubApiService client, IDbContextFactory<Applicati
             }
 
             await logging($"Fetching Workflow-runs for Workflow [{request.WorkflowName}]:");
-            
+
+            const int itemsPerPage = 100;
             var totalCount = int.MaxValue;
-            for (var page = 1; totalCount == int.MaxValue || page < (totalCount / 30); page++)
+            for (var page = 1; totalCount == int.MaxValue || (page * itemsPerPage) <= totalCount; page++)
             {
-                var workflowRuns = await client.GetWorkflowRuns(request.Owner, request.Repository, workflow.WorkflowId, new WorkflowRunsParams() { PerPage = 100, Page = page });
+                var workflowRuns = await client.GetWorkflowRuns(request.Owner, request.Repository, workflow.WorkflowId, new WorkflowRunsParams() { PerPage = itemsPerPage, Page = page });
                 if (totalCount == int.MaxValue)
                 {
                     totalCount = workflowRuns.TotalCount;
@@ -53,7 +54,7 @@ public class GithubService(IGithubApiService client, IDbContextFactory<Applicati
                         cancellationToken.ThrowIfCancellationRequested();   
                     }
                     
-                    var prefix = $"[{(page - 1) * 100 + index + 1}/{totalCount}]";
+                    var prefix = $"[{(page - 1) * itemsPerPage + index + 1}/{totalCount}]";
                     await logging($"{prefix}: Trying to process workflow-run with given job-name");
                     
                     var workflowRun =  await FindOrCreateWorkflowRun(workflow, workflowRuns.WorkflowRuns[index], dbContext, prefix);
@@ -84,7 +85,30 @@ public class GithubService(IGithubApiService client, IDbContextFactory<Applicati
 
                     try
                     {
-                        var testSuite = await ParseTestsFromLogfile(stream, logging, prefix);
+                        var testSuite = await ParseTestsFromLogfile(githubJob, stream, logging, prefix);
+                        
+                        dbContext.TestSuites.Add(testSuite);
+                        dbContext.SaveChanges();
+                        
+                        //foreach (var test in testSuite.Tests)
+                        //{
+                        //    test.TestSuiteId = testSuite.Id;
+                        //    test.TestSuite = testSuite;
+                        //    dbContext.Tests.Add(test);
+                        //}
+                        //
+                        //dbContext.SaveChanges();
+                        //foreach (var test in testSuite.Tests)
+                        //{
+                        //    foreach (var attempt in test.Attempts)
+                        //    {
+                        //        attempt.TestId = test.Id;
+                        //        attempt.Test = test;
+                        //        dbContext.TestAttempts.Add(attempt);
+                        //    }
+                        //}
+                        //
+                        //dbContext.SaveChanges();
                     }
                     catch (Exception e)
                     {
@@ -226,10 +250,33 @@ public class GithubService(IGithubApiService client, IDbContextFactory<Applicati
         return logUrl;
     }
 
-    private async Task<TestSuite> ParseTestsFromLogfile(Stream fileStream, Func<string, Task> log, string prefix)
+    private async Task<TestSuite> ParseTestsFromLogfile(Job job, Stream fileStream, Func<string, Task> log, string prefix)
     {
         var testFile = new PlaywrightLogParser().ParseLogFile(new StreamReader(fileStream));
         await log($"{prefix}: Found {testFile.CountPassedTests} passed, {testFile.CountFlakyTests} flaky and {testFile.CountFailedTests} failed tests in log");
-        return new TestSuite();
+
+        var testSuite = new TestSuite()
+        {
+            JobId = job.JobId,
+            CountSkippedTests = testFile.CountSkippedTests,
+            CountFlakyTests = testFile.CountFlakyTests,
+            CountPassedTests = testFile.CountPassedTests,
+            CountFailedTests = testFile.CountFailedTests,
+        };
+        
+        foreach (var testResult in testFile.TestResults)
+        {
+            testSuite.Tests.Add(new Test()
+            {
+                Status = testResult.TestStatus,
+                Name = testResult.Identifier.Name,
+                Attempts = testResult.Attempts.ConvertAll(x => new TestAttempt()
+                {
+                    Message = x.ErrorMessage
+                })
+            });
+        }
+
+        return testSuite;
     }
 }

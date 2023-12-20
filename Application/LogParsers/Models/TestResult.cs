@@ -1,10 +1,6 @@
-﻿namespace Application.LogParsers.Models;
+﻿using Application.Features.Tests.Entities;
 
-public enum TestStatus
-{
-    Failed,
-    Flaky
-}
+namespace Application.LogParsers.Models;
 
 public class TestResult
 {

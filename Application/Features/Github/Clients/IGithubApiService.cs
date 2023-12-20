@@ -1,6 +1,4 @@
 ﻿using Application.Features.Github.Clients.Responses;
-using Application.Features.Github.Entities;
-using Application.Features.Github.Models;
 using Refit;
 
 namespace Application.Features.Github.Clients;
@@ -9,6 +7,8 @@ public class WorkflowRunsParams
 {
     [AliasAs("per_page")]
     public int PerPage { get; set; } = 100;
+    
+    [AliasAs("page")]
     public int Page { get; set; } = 1;
 }
 
