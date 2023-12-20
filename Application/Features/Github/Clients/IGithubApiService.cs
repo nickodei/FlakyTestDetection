@@ -15,36 +15,18 @@ public class WorkflowRunsParams
 public interface IGithubApiService
 {
     [Get("/repos/{owner}/{repo}")]
-    Task<GetRepositoryResponse> GetRepository(string owner, string repo);
+    Task<RepositoryResult> GetRepository(string owner, string repo);
     
     [Get("/repos/{owner}/{repo}/actions/workflows")]
-    Task<WorkflowListResult> GetWorkflowsForRepository(string owner, string repo);
-    
-    [Get("/repos/{owner}/{repo}/actions/workflows/{name}")]
-    Task<WorkflowResult> GetWorkflow(string owner, string repo, string name);
+    Task<WorkflowsResult> GetWorkflowsForRepository(string owner, string repo);
     
     [Get("/repos/{owner}/{repo}/actions/workflows/{workflowId}/runs")]
-    Task<WorkflowRunResult> GetWorkflowRuns(string owner, string repo, long workflowId, WorkflowRunsParams queryParams);
+    Task<WorkflowRunsResult> GetWorkflowRuns(string owner, string repo, long workflowId, WorkflowRunsParams queryParams);
     
     [Get("/repos/{owner}/{repo}/actions/runs/{runId}/jobs")]
     Task<JobsResult> GetJobsForWorkflowRun(string owner, string repo, long runId);
     
     [Get("/repos/{owner}/{repo}/actions/jobs/{jobId}/logs")]
     Task<HttpResponseMessage> GetDownloadUrlForJobLogs(string owner, string repo, long jobId);
-    
-    
-    
-    
-    
-    
-    
-    [Get("/repos/{owner}/{repo}/actions/workflows")]
-    Task<GetWorkflowsResponse> GetWorkflows(string owner, string repo);
-    
 
-
-
-    
-    [Get("/repos/{owner}/{repo}/actions/runs/{workflowRunId}/logs")]
-    Task<HttpResponseMessage> GetWorkflowRunLogs(string owner, string repo, long workflowRunId);
 }

@@ -9,5 +9,8 @@ public class JobsResult
 public class JobResult
 {
     public long Id { get; set; }
-    public string Name { get; set; }
+    public required string Name { get; set; }
+    public required string Status { get; set; }
+    public required string Conclusion { get; set; }
+    public required DateTime StartedAt { get; set; }
 }

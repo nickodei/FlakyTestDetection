@@ -28,7 +28,7 @@ builder.Services.AddResponseCompression(opts =>
 builder.Services.AddRefitClient<IScraperClient>()
     .ConfigureHttpClient(client => 
     {
-        client.BaseAddress = new Uri("http://localhost:8080");
+        client.BaseAddress = new Uri("http://localhost:5227");
     });
 
 var app = builder.Build();
@@ -58,7 +58,6 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.MapGithubEndpoints();
 app.MapScraperEndpoints();
 
 app.MapHub<ScraperHub>("/scraperhub");

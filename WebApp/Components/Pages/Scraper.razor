@@ -11,72 +11,132 @@
 
 <div Class="rz-p-0 rz-p-md-8">
     <RadzenTemplateForm TItem="ScrapingRequest" Data="model" Submit="OnSubmit">
-        <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Class="rz-p-sm-12">
-            <RadzenFormField Text="Owner" >
-                <ChildContent>
-                    <RadzenTextBox Name="Owner" @bind-Value="model.Owner" />
-                </ChildContent>
-                <Helper>
-                    <RadzenRequiredValidator Component="Owner" Text="Owner is required." />
-                </Helper>
-            </RadzenFormField>
-            <RadzenFormField Text="Repository">
-                <ChildContent>
-                    <RadzenTextBox Name="Repository" @bind-Value="model.Repository" />
-                </ChildContent>
-                <Helper>
-                    <RadzenRequiredValidator Component="Repository" Text="Repository is required." />
-                </Helper>
-            </RadzenFormField>
-            <RadzenFormField Text="Workflow Name">
-                <ChildContent>
-                    <RadzenTextBox Name="WorkflowName" @bind-Value="model.WorkflowName" />
-                </ChildContent>
-                <Helper>
-                    <RadzenRequiredValidator Component="WorkflowName" Text="Name of Workflow is required." />
-                </Helper>
-            </RadzenFormField>
-            <RadzenFormField Text="Job">
-                <ChildContent>
-                    <RadzenTextBox Name="Job" @bind-Value="model.Job" />
-                </ChildContent>
-                <Helper>
-                    <RadzenRequiredValidator Component="Job" Text="Job is required." />
-                </Helper>
-            </RadzenFormField>
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" ></RadzenButton>
-            <RadzenButton ButtonType="ButtonType.Button" Text="Cancel" Click="Cancel" ></RadzenButton>
-        </RadzenStack>
+        <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenStack>
+                    <RadzenFieldset Text="Repository Info">
+                        <RadzenStack  Gap="1rem">
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Owner" Component="Owner" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox Style="width: 100%;" Name="Owner" @bind-Value="model.Owner" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Repository" Component="Repository" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox Style="width: 100%;" Name="Repository" @bind-Value="model.Repository" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenStack>
+                    </RadzenFieldset>
+                    <RadzenFieldset Text="Workflow">
+                        <RadzenStack  Gap="1rem">
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Workflow" Component="Workflow" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenDropDown SelectedItemChanged="(item) => GetJobs(item)" @bind-Value="model.WorkflowId" Data="workflows" TextProperty="Name" ValueProperty="Id" AllowClear="true" Placeholder="Select workflow" Style="width: 100%;" Name="Workflow"></RadzenDropDown>
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Jobs" Component="Jobs" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenDropDown @bind-Value="model.JobNames" Data="jobs" Name="Jobs" Multiple="true" AllowClear="true" Placeholder="Select jobs" Chips="true" Style="width: 100%;" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenStack>
+                    </RadzenFieldset>
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                      <RadzenButton ButtonType="ButtonType.Submit" Text="Start Request"></RadzenButton>
+                      <RadzenButton ButtonType="ButtonType.Button" Text="Cancel Request" Click="Cancel"></RadzenButton>  
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenStack>
+                    <RadzenFieldset Text="Running Jobs">
+                        <ul>
+                        @foreach (var jobStatus in scrapingStatus.JobStatusList)
+                        {
+                            <li>@jobStatus.Name: [Job not Found: @jobStatus.AmountJobNotFound], [Parsing Errors: @jobStatus.AmountParsingError]</li>
+                        }
+                        </ul>
+                    </RadzenFieldset>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12">
+                <RadzenStack>
+                    <RadzenFieldset Text="Results">
+                        <RadzenStack  Gap="1rem">
+                            <EventConsole @ref=@console/>
+                        </RadzenStack>
+                    </RadzenFieldset>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
     </RadzenTemplateForm>
 </div>
 
-<EventConsole @ref=@console />
-
 @code {
-    private EventConsole console;
+    private EventConsole? console;
     private HubConnection? hubConnection;
-    private ScrapingRequest model = new()
+
+    private readonly ScrapingRequest model = new()
     {
         Owner = "WordPress",
         Repository = "gutenberg",
-        WorkflowName = "End-to-End Tests",
-        LogFilePath = "Playwright - 7/7_Run the tests.txt",
-        Job = "Playwright - 7"
     };
+    
+    private readonly List<string> jobs = [];
+    private IEnumerable<WorkflowResponse> workflows = [];
+
+    private ScrapingStatus scrapingStatus = new();
     
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(new Uri("http://host.docker.internal:5000/scraperhub"))
+            .WithUrl(new Uri("http://localhost:5227/scraperhub"))
             .Build();
 
         hubConnection.On<string>("ReceiveLog", (message) =>
         {
-            console.Log(message);
+            console!.Log(message);
+        });
+
+        hubConnection.On<ScrapingStatus>("StatusUpdate", (statusUpdate) =>
+        {
+            scrapingStatus = statusUpdate;
+            InvokeAsync(StateHasChanged);
         });
 
         await hubConnection.StartAsync();
+        await GetWorkflows();
     }
+
+    private async Task GetWorkflows()
+    {
+        workflows = await client.GetWorkflows(model.Owner, model.Repository);
+    }
+
+    private async Task GetJobs(object selectedWorkflow)
+    {
+        var result = await client.GetJobs(model.Owner, model.Repository, ((WorkflowResponse)selectedWorkflow).Id);
+        
+        jobs.Clear();
+        jobs.AddRange(result);
+    }
+    
+    
     
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
 

@@ -2,8 +2,8 @@
 
 namespace Application.Features.Github.Clients.Responses;
 
-public class WorkflowRunResult
+public class WorkflowRunsResult
 {
     public int TotalCount { get; set; }
-    public List<WorkflowRunVm> WorkflowRuns { get; set; }
+    public List<WorkflowRunResult> WorkflowRuns { get; set; }
 }

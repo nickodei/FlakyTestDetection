@@ -1,20 +1,75 @@
 ﻿using System.Net;
 using Application.Features.Github.Clients;
+using Application.Features.Github.Clients.Responses;
 using Application.Features.Github.Entities;
 using Application.Features.Github.Models;
-using Application.Features.Tests.Entities;
 using Application.Infrastructure;
 using Application.LogParsers;
-using Application.LogParsers.Parsers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Github;
 
-public class GithubService(IGithubApiService client, IDbContextFactory<ApplicationDbContext> dbContextFactory) : IGithubService
+public class GithubService() : IGithubService
 {
+    public bool JobAlreadyExists(long workflowRunId, string jobName, ApplicationDbContext dbContext)
+    {
+        return dbContext.Jobs.FirstOrDefault(x => x.WorkflowRunId == workflowRunId && x.Name == jobName) is not null;
+    }
+
+    public Job CreateJob(long workflowRunId, JobResult jobResult, ApplicationDbContext dbContext)
+    {
+        var job = new Job()
+        {
+            JobId = jobResult.Id,
+            WorkflowRunId = workflowRunId,
+            Name = jobResult.Name,
+            Status = jobResult.Status,
+            StartedAt = jobResult.StartedAt,
+            Conclusion = jobResult.Conclusion,
+        };
+
+        dbContext.Jobs.Add(job);
+        dbContext.SaveChanges();
+
+        return job;
+    }
+
+    public async Task<Uri?> DownloadLogFileUrl(string owner, string repository, long jobId, IGithubApiService client)
+    {
+        var httpResponse = await client.GetDownloadUrlForJobLogs(owner, repository, jobId);
+        return httpResponse.StatusCode == HttpStatusCode.NotFound ? null : httpResponse.RequestMessage?.RequestUri;
+    }
+    
+    public async Task<WorkflowRun> FindOrCreateWorkflowRun(WorkflowRunResult githubWorkflowRun, long workflowId, IDbContextFactory<ApplicationDbContext> dbContextFactory)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(CancellationToken.None);
+        
+        var found = await dbContext.WorkflowRuns.FirstOrDefaultAsync(x => x.WorkflowRunId == githubWorkflowRun.Id);
+        if (found is not null)
+        {
+            return found;
+        }
+
+        var workflowRun = new WorkflowRun()
+        {
+            WorkflowId = workflowId,
+            WorkflowRunId = githubWorkflowRun.Id,
+            Name = githubWorkflowRun.DisplayTitle,
+            Status = githubWorkflowRun.Status,
+            Event = githubWorkflowRun.Event,
+            CreatedAt = githubWorkflowRun.CreatedAt
+        };
+            
+        dbContext.WorkflowRuns.Add(workflowRun);
+        await dbContext.SaveChangesAsync();
+
+        return workflowRun;
+    }
+    
+    
     public async Task StartGithubScraping(ScrapingRequest request, ILogFileParser parser, Func<string, Task> logging, CancellationToken cancellationToken)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        /*cancellationToken.ThrowIfCancellationRequested();
         await using var dbContext = await dbContextFactory.CreateDbContextAsync(cancellationToken);
         
         await logging($"Starting Log-Scraping on Github for: {request.Owner}/{request.Repository}");
@@ -125,10 +180,10 @@ public class GithubService(IGithubApiService client, IDbContextFactory<Applicati
         {
             Console.WriteLine(e);
             await logging($"An error occured. Aborting.");
-        }
+        }*/
     }
     
-    private async Task<Repository> FindOrCreateRepository(ScrapingRequest request, ApplicationDbContext dbContext, Func<string, Task> log)
+    /*private async Task<Repository> FindOrCreateRepository(ScrapingRequest request, ApplicationDbContext dbContext, Func<string, Task> log)
     {
         await log($"Trying to get Repository {request.Owner}/{request.Repository}:");
         var repo = await dbContext.Repositories.FirstOrDefaultAsync(x => x.Owner == request.Owner && x.Name == request.Repository);
@@ -278,5 +333,5 @@ public class GithubService(IGithubApiService client, IDbContextFactory<Applicati
         }
 
         return testSuite;
-    }
+    }*/
 }

@@ -32,7 +32,7 @@ public static class DependencyInjection
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("flaky-test-detection");
                 
             }).AddHttpMessageHandler<RetryHandler>();
-
+        
         services.AddHttpClient("GithubLogClient", client =>
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("GITHUB_TOKEN"));
@@ -40,7 +40,7 @@ public static class DependencyInjection
         }).AddHttpMessageHandler<RetryHandler>();
         
         services.AddDbContextFactory<ApplicationDbContext>(options =>
-            options.UseNpgsql("User ID=postgres;Password=password;Server=postgres;Port=5432;Database=FlakyTestDetection;Pooling=true;")
+            options.UseNpgsql("User ID=postgres;Password=password;Server=localhost;Port=5432;Database=FlakyTestDetection;Pooling=true;")
         );
         
         services.AddSingleton<IGithubService, GithubService>();

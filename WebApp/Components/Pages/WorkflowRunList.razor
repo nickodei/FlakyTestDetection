@@ -32,7 +32,7 @@
         dbContext = DbFactory.CreateDbContext();
         workflowRuns = dbContext.WorkflowRuns
             .Include(x => x.Workflow)
-            .ThenInclude(x => x.Repository)
+            .ThenInclude(x => x!.Repository)
             .ToList();
 
         return base.OnInitializedAsync();

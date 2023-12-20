@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Application.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231218223602_test")]
-    partial class test
+    [Migration("20231220230629_v0.0.1")]
+    partial class v001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,18 @@ namespace Application.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("JobId"));
 
+                    b.Property<string>("Conclusion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -80,12 +91,19 @@ namespace Application.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("WorkflowId"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("RepositoryId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("WorkflowId");
 
@@ -105,6 +123,10 @@ namespace Application.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Event")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -121,6 +143,82 @@ namespace Application.Infrastructure.Migrations
                     b.HasIndex("WorkflowId");
 
                     b.ToTable("WorkflowRuns");
+                });
+
+            modelBuilder.Entity("Application.Features.Tests.Entities.Test", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TestSuiteId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestSuiteId");
+
+                    b.ToTable("Tests");
+                });
+
+            modelBuilder.Entity("Application.Features.Tests.Entities.TestAttempt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Message")
+                        .HasColumnType("text");
+
+                    b.Property<int>("TestId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestId");
+
+                    b.ToTable("TestAttempts");
+                });
+
+            modelBuilder.Entity("Application.Features.Tests.Entities.TestSuite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CountFailedTests")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CountFlakyTests")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CountPassedTests")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CountSkippedTests")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("JobId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("TestSuites");
                 });
 
             modelBuilder.Entity("Application.Features.Github.Entities.Job", b =>
@@ -156,6 +254,39 @@ namespace Application.Infrastructure.Migrations
                     b.Navigation("Workflow");
                 });
 
+            modelBuilder.Entity("Application.Features.Tests.Entities.Test", b =>
+                {
+                    b.HasOne("Application.Features.Tests.Entities.TestSuite", "TestSuite")
+                        .WithMany("Tests")
+                        .HasForeignKey("TestSuiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TestSuite");
+                });
+
+            modelBuilder.Entity("Application.Features.Tests.Entities.TestAttempt", b =>
+                {
+                    b.HasOne("Application.Features.Tests.Entities.Test", "Test")
+                        .WithMany("Attempts")
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Test");
+                });
+
+            modelBuilder.Entity("Application.Features.Tests.Entities.TestSuite", b =>
+                {
+                    b.HasOne("Application.Features.Github.Entities.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+                });
+
             modelBuilder.Entity("Application.Features.Github.Entities.Repository", b =>
                 {
                     b.Navigation("Workflows");
@@ -169,6 +300,16 @@ namespace Application.Infrastructure.Migrations
             modelBuilder.Entity("Application.Features.Github.Entities.WorkflowRun", b =>
                 {
                     b.Navigation("Jobs");
+                });
+
+            modelBuilder.Entity("Application.Features.Tests.Entities.Test", b =>
+                {
+                    b.Navigation("Attempts");
+                });
+
+            modelBuilder.Entity("Application.Features.Tests.Entities.TestSuite", b =>
+                {
+                    b.Navigation("Tests");
                 });
 #pragma warning restore 612, 618
         }

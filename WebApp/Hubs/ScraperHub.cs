@@ -1,9 +1,8 @@
-﻿using Application.LogParsers.Parsers;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 
 namespace WebApp.Hubs;
 
-public class ScraperHub() : Hub
+public class ScraperHub : Hub
 {
     public Task StopGithubScraping()
     {
