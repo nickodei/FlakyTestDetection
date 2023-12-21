@@ -1,23 +1,37 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
-    </div>
+<RadzenLayout>
+    <RadzenHeader>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+            <RadzenLabel Text="Header" />
+        </RadzenStack>
+    </RadzenHeader>
+    <RadzenSidebar @bind-Expanded="sidebar1Expanded">
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="Scraper" Path="Scraper" Icon="manage_history" />
+            <RadzenPanelMenuItem Text="Daten" Icon="storage" Expanded="true">
+                <RadzenPanelMenuItem Text="Summary" Path="Summary" Icon="web" />
+                <RadzenPanelMenuItem Text="Repositories" Path="RepositoryList" Icon="web"/>
+                <RadzenPanelMenuItem Text="Workflows" Path="WorkflowList" Icon="web"/>
+                <RadzenPanelMenuItem Text="Workflow-runs" Path="WorkflowRunList" Icon="web"/>
+                <RadzenPanelMenuItem Text="Test-suites" Path="TestSuiteList" Icon="web"/>
+                <RadzenPanelMenuItem Text="Tests" Path="TestList" Icon="web"/>
+            </RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="Visualisierungen" Icon="auto_awesome" Expanded="true">
+                
+            </RadzenPanelMenuItem>
+        </RadzenPanelMenu>
+    </RadzenSidebar>
+    <RadzenBody>
+        <ChildContent>
+            <RadzenContentContainer Name="main">
+                @Body
+            </RadzenContentContainer>
+        </ChildContent>
+    </RadzenBody>
+</RadzenLayout>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+@code {
+    bool sidebar1Expanded = true;
+}

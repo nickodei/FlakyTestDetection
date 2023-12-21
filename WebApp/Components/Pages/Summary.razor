@@ -1,0 +1,65 @@
+﻿@page "/Summary"
+@rendermode InteractiveServer
+
+@using Microsoft.EntityFrameworkCore
+@using Application.Infrastructure
+@using Application.Features.Tests.Entities
+
+@implements IDisposable
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h3>Summary</h3>
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="repositorySummaries" TItem="RepositorySummary" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <Columns>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="Repository" Title="Repository"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TotalTests" Title="Total Tests"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsPassed" Title="Passed Tests"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsFlaky" Title="Flaky Tests"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsFailed" Title="Failed Tests"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsSkipped" Title="Skipped Tests"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    public class RepositorySummary
+    {
+        public required string Repository { get; set; }
+        public required long TotalTests { get; set; }
+        public required long TestsPassed { get; set; }
+        public required long TestsFlaky { get; set; }
+        public required long TestsFailed { get; set; }
+        public required long TestsSkipped { get; set; }
+    }
+
+    private ApplicationDbContext? dbContext;
+    private IEnumerable<RepositorySummary> repositorySummaries = [];
+    
+    protected override Task OnInitializedAsync()
+    {
+        dbContext = DbFactory.CreateDbContext();
+        var query = from repository in dbContext.Repositories
+            join workflow in dbContext.Workflows on repository.RepositoryId equals workflow.RepositoryId
+            join workflowRun in dbContext.WorkflowRuns on workflow.WorkflowId equals workflowRun.WorkflowId
+            join job in dbContext.Jobs on workflowRun.WorkflowRunId equals job.WorkflowRunId
+            join testSuite in dbContext.TestSuites on job.JobId equals testSuite.JobId
+            group testSuite by repository.FullName into g
+            select new RepositorySummary()
+            {
+                Repository = g.Key,
+                TestsPassed = g.Sum(x => x.CountPassedTests),
+                TestsFailed = g.Sum(x => x.CountFailedTests),
+                TestsFlaky = g.Sum(x => x.CountFlakyTests),
+                TestsSkipped = g.Sum(x => x.CountSkippedTests),
+                TotalTests = g.Sum(x => x.CountPassedTests + x.CountFailedTests + x.CountFlakyTests + x.CountSkippedTests)
+            };
+
+        repositorySummaries = query.ToList();
+        return base.OnInitializedAsync();
+    }
+    
+    public void Dispose()
+    {
+        dbContext?.Dispose();
+    }
+}
