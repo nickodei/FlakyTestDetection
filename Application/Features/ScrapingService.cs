@@ -68,6 +68,14 @@ public class ScrapingService(IGithubApiService client, IGithubService githubServ
         
         return workflow;
     }
+
+    public async Task<bool> WorkflowRunAlreadyExists(long workflowRunId, IDbContextFactory<ApplicationDbContext> dbContextFactory)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+        
+        var workflowRun = await dbContext.WorkflowRuns.FindAsync(workflowRunId);
+        return workflowRun is not null;
+    }
     
     public static async Task<TestSuite> CreateTestSuiteFromParsingResult(long jobId, TestFile testFile, ApplicationDbContext dbContext)
     {

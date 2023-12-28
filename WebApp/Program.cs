@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Application;
 using Application.Infrastructure;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -26,10 +28,30 @@ builder.Services.AddResponseCompression(opts =>
 
 // Scraper-client
 builder.Services.AddRefitClient<IScraperClient>()
+    //{
+    //    ContentSerializer = new SystemTextJsonContentSerializer(new JsonSerializerOptions
+    //    {
+    //        PropertyNameCaseInsensitive = true,
+    //        NumberHandling = JsonNumberHandling.AllowReadingFromString,
+    //        Converters =
+    //        {
+    //            new JsonStringEnumConverter()
+    //        }
+    //    })
+    //})
     .ConfigureHttpClient(client => 
     {
         client.BaseAddress = new Uri("http://localhost:5227");
     });
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 var app = builder.Build();
 

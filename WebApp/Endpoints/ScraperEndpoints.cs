@@ -18,6 +18,7 @@ namespace WebApp.Endpoints;
 public static class ScraperEndpoints
 {
     private static CancellationTokenSource? cancellationTokenSource;
+    private static readonly string[] allowedWorkflowRunStatus = ["completed", "success", "failure"];
     public static IEndpointRouteBuilder MapScraperEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/scraper/github/{owner}/{repository}/workflows", async (string owner, string repository, IGithubApiService client) =>
@@ -68,8 +69,24 @@ public static class ScraperEndpoints
                         return;
                     }
 
+                    if (request.SkippingRequest == SkippingRequest.Workflow)
+                    {
+                        if (await scrapingService.WorkflowRunAlreadyExists(workflowRuns.WorkflowRuns[index].Id, dbContextFactory))
+                        {
+                            await hubContext.Clients.All.SendAsync("ReceiveLog", $"[{((page - 1) * itemsPerPage) + index + 1}/{totalAmount}] Skipping processed WorkflowRun");
+                            continue;
+                        }
+                    }
+
                     var workflowRun = await githubService.FindOrCreateWorkflowRun(workflowRuns.WorkflowRuns[index],
                         request.WorkflowId, dbContextFactory);
+
+                    if (!allowedWorkflowRunStatus.Contains(workflowRun.Status))
+                    {
+                        await hubContext.Clients.All.SendAsync("ReceiveLog", $"[{((page - 1) * itemsPerPage) + index + 1}/{totalAmount}] Skipping WorkflowRun with Status {workflowRun.Status}");
+                        continue;
+                    }
+                    
                     var githubJobs = await client.GetJobsForWorkflowRun(request.Owner, request.Repository,
                         workflowRun.WorkflowRunId);
 
@@ -84,8 +101,7 @@ public static class ScraperEndpoints
                                 return;
                             }
 
-                            await using var dbContext =
-                                await dbContextFactory.CreateDbContextAsync(CancellationToken.None);
+                            await using var dbContext = await dbContextFactory.CreateDbContextAsync(CancellationToken.None);
                             if (githubService.JobAlreadyExists(workflowRun.WorkflowRunId, jobName, dbContext))
                             {
                                 return;
@@ -97,7 +113,7 @@ public static class ScraperEndpoints
                                 job.JobId, client);
                             if (url is null)
                             {
-                                await hubContext.Clients.All.SendAsync("ReceiveLog", $"[{(page * itemsPerPage) + index + 1}/{totalAmount}] Got 404 From Url-Request");
+                                await hubContext.Clients.All.SendAsync("ReceiveLog", $"[{((page - 1) * itemsPerPage) + index + 1}/{totalAmount}] Got 404 From Url-Request");
                             }
 
                             using var httpClient = httpClientFactory.CreateClient();
@@ -112,9 +128,14 @@ public static class ScraperEndpoints
                             {
                                 Console.WriteLine(e);
                                 scrapingStatus.IncreaseParsingError(jobName);
+                                
+                                job.ParsingStatus = ParsingStatus.Failed;
+                                dbContext.SaveChanges();
+                                
                                 return;
                             }
 
+                            job.ParsingStatus = ParsingStatus.Success;
                             var testSuite = new TestSuite()
                             {
                                 JobId = job.JobId,
@@ -147,7 +168,7 @@ public static class ScraperEndpoints
                         }
                     });
 
-                    await hubContext.Clients.All.SendAsync("ReceiveLog", $"[{(page * itemsPerPage) + index + 1}/{totalAmount}] Workflows done");
+                    await hubContext.Clients.All.SendAsync("ReceiveLog", $"[{((page - 1) * itemsPerPage) + index + 1}/{totalAmount}] Workflows done");
                     await hubContext.Clients.All.SendAsync("StatusUpdate", scrapingStatus);
                 }
             }

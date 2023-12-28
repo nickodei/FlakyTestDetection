@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using WebApp.Clients
 @using Application.Features.Github.Models
+@using Microsoft.EntityFrameworkCore
 @inject NavigationManager Navigation
 @inject IScraperClient client
 @implements IAsyncDisposable
@@ -41,7 +42,8 @@
                                     <RadzenLabel Text="Workflow" Component="Workflow" />
                                 </RadzenColumn>
                                 <RadzenColumn Size="12" SizeMD="8">
-                                    <RadzenDropDown SelectedItemChanged="(item) => GetJobs(item)" @bind-Value="model.WorkflowId" Data="workflows" TextProperty="Name" ValueProperty="Id" AllowClear="true" Placeholder="Select workflow" Style="width: 100%;" Name="Workflow"></RadzenDropDown>
+                                    <RadzenDropDown @bind-Value="model.WorkflowId" Data="workflows" TextProperty="Name" ValueProperty="Id" AllowClear="true" Placeholder="Select workflow" Style="width: auto;" Name="Workflow"></RadzenDropDown>
+                                    <RadzenButton ButtonType="ButtonType.Button" Text="Load" Click="LoadWorkflows"></RadzenButton>  
                                 </RadzenColumn>
                             </RadzenRow>
                             <RadzenRow AlignItems="AlignItems.Center">
@@ -49,7 +51,21 @@
                                     <RadzenLabel Text="Jobs" Component="Jobs" />
                                 </RadzenColumn>
                                 <RadzenColumn Size="12" SizeMD="8">
-                                    <RadzenDropDown @bind-Value="model.JobNames" Data="jobs" Name="Jobs" Multiple="true" AllowClear="true" Placeholder="Select jobs" Chips="true" Style="width: 100%;" />
+                                    <RadzenDropDown @bind-Value="model.JobNames" Data="jobs" Name="Jobs" Multiple="true" AllowClear="true" Placeholder="Select jobs" Chips="true" Style="width: auto;" />
+                                    <RadzenButton ButtonType="ButtonType.Button" Text="Load" Click="LoadJobs"></RadzenButton> 
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Skip processed:" Component="Parameter" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                   <RadzenRadioButtonList @bind-Value="model.SkippingRequest" TValue="SkippingRequest">
+                                       <Items>
+                                           <RadzenRadioButtonListItem Text="Jobs" Value="SkippingRequest.Job" />
+                                           <RadzenRadioButtonListItem Text="Workflows" Value="SkippingRequest.Workflow" />
+                                       </Items>
+                                   </RadzenRadioButtonList>
                                 </RadzenColumn>
                             </RadzenRow>
                         </RadzenStack>
@@ -95,10 +111,11 @@
     {
         Owner = "WordPress",
         Repository = "gutenberg",
+        SkippingRequest = SkippingRequest.Job
     };
     
-    private readonly List<string> jobs = [];
-    private IEnumerable<WorkflowResponse> workflows = [];
+    private IEnumerable<string> jobs;
+    private IEnumerable<WorkflowResponse> workflows;
 
     private ScrapingStatus scrapingStatus = new();
     
@@ -106,6 +123,7 @@
     {
         hubConnection = new HubConnectionBuilder()
             .WithUrl(new Uri("http://localhost:5227/scraperhub"))
+            .WithAutomaticReconnect()
             .Build();
 
         hubConnection.On<string>("ReceiveLog", (message) =>
@@ -120,23 +138,7 @@
         });
 
         await hubConnection.StartAsync();
-        await GetWorkflows();
     }
-
-    private async Task GetWorkflows()
-    {
-        workflows = await client.GetWorkflows(model.Owner, model.Repository);
-    }
-
-    private async Task GetJobs(object selectedWorkflow)
-    {
-        var result = await client.GetJobs(model.Owner, model.Repository, ((WorkflowResponse)selectedWorkflow).Id);
-        
-        jobs.Clear();
-        jobs.AddRange(result);
-    }
-    
-    
     
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
 
@@ -156,5 +158,17 @@
     async Task Cancel()
     {
         await client.StopScraping();
+    }
+
+    private void LoadWorkflows()
+    {
+        workflows = client.GetWorkflows(model.Owner, model.Repository).Result;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void LoadJobs()
+    {
+        jobs = client.GetJobs(model.Owner, model.Repository, model.WorkflowId).Result;
+        InvokeAsync(StateHasChanged);
     }
 }

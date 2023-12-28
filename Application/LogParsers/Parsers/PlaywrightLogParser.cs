@@ -17,6 +17,7 @@ public partial class PlaywrightLogParser : ILogFileParser
     private readonly Regex passedTestsRegex = ContainsCountOfPassedTests();
     private readonly Regex skippedTestsRegex = ContainsCountOfSkippedTests();
     private readonly Regex flakyTestsRegex = ContainsCountOfFlakyTests();
+    private readonly Regex failedTestsRegex = ContainsCountOfFailedTests();
     private readonly Regex testSummaryIdentifierParsing = TestSummaryIdentifierParsing();
     
     private readonly Regex reachedError = ReachedError();
@@ -62,6 +63,11 @@ public partial class PlaywrightLogParser : ILogFileParser
 
     private string? ParseError(Dictionary<TestIdentifier, List<TestRun>?> testDictionary, StreamReader stream, string? currentLine)
     {
+        if (currentLine!.Contains("Process completed with exit code"))
+        {
+            return stream.ReadLine();
+        }
+        
         if (!errorIdentifierRegex.IsMatch(currentLine!))
         {
             throw new Exception("Couldn't parse identifier of test case");
@@ -111,6 +117,17 @@ public partial class PlaywrightLogParser : ILogFileParser
             {
                 var identifier = GetTestIdentifierFromSummary(testSummaryIdentifierParsing, currentLine);
                 result.TestResults.Add(TestResult.CreateFlayTest(identifier));
+            }
+            
+            return currentLine;
+        }
+        else if (failedTestsRegex.IsMatch(currentLine!))
+        {
+            result.CountFailedTests = ParseIntFromRegexGroup(failedTestsRegex, 1, currentLine!);
+            for (currentLine = stream.ReadLine(); currentLine is not null && testSummaryIdentifierParsing.IsMatch(currentLine); currentLine = stream.ReadLine())
+            {
+                var identifier = GetTestIdentifierFromSummary(testSummaryIdentifierParsing, currentLine);
+                result.TestResults.Add(TestResult.CreateFailedTest(identifier));
             }
             
             return currentLine;
@@ -179,6 +196,9 @@ public partial class PlaywrightLogParser : ILogFileParser
     
     [GeneratedRegex(@"([0-9]+) flaky")]
     private static partial Regex ContainsCountOfFlakyTests();
+    
+    [GeneratedRegex(@"([0-9]+) failed")]
+    private static partial Regex ContainsCountOfFailedTests();
     
     [GeneratedRegex(@"(##\[error\])(.*)")]
     private static partial Regex ReachedError();

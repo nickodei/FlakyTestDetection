@@ -9,13 +9,13 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 
 <h3>Workflow-Runs</h3>
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+<RadzenDataGrid AllowFiltering="true" AllowGrouping="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="workflowRuns" TItem="WorkflowRun" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
     <HeaderTemplate>
         <RadzenButton Text="Delete Workflow-Runs" Click="DeleteAllWorkflowRuns"  />
     </HeaderTemplate>
     <Columns>
-        <RadzenDataGridColumn TItem="WorkflowRun" Property="Id" Title="Workflow-run Id"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="WorkflowRun" Property="WorkflowRunId" Title="Workflow-run Id"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="WorkflowRun" Property="Workflow.Repository.FullName" Title="Repository"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="WorkflowRun" Property="Workflow.Name" Title="Workflow"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="WorkflowRun" Property="Name" Title="Name"></RadzenDataGridColumn>

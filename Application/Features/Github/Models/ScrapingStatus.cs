@@ -34,7 +34,7 @@ public class ScrapingStatus
     public void IncreaseParsingError(string job)
     {
         var jobStatus = GetJobStatus(job);
-        jobStatus.AmountUnexpectedError++;
+        jobStatus.AmountParsingError++;
     }
     
     
