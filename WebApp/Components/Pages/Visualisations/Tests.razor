@@ -1,0 +1,78 @@
+﻿@page "/test-visualisations"
+@using Microsoft.EntityFrameworkCore
+@using Application.Infrastructure
+@using Application.Features.Github.Entities
+@rendermode InteractiveServer
+
+@implements IDisposable
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h3>Test visualisations</h3>
+
+<RadzenChart>
+    <RadzenDonutSeries Data="@testCountByRepositories.First().testCounts" CategoryProperty="Status" ValueProperty="CountTests" TotalAngle="360" StartAngle="360">
+        <ChildContent>
+            <RadzenSeriesDataLabels Visible="true" />
+        </ChildContent>
+        <TitleTemplate>
+            <div class="rz-donut-content">
+                <div>Tests by</div>
+                <div>Repository</div>
+            </div>
+        </TitleTemplate>
+    </RadzenDonutSeries>
+</RadzenChart>
+
+@code {
+    private class TestCountByRepository
+    {
+        public string Name { get; set; }
+        public IEnumerable<TestCount> testCounts { get; set; }
+    }
+    
+    private class TestCount
+    {
+        public string Status { get; set; }
+        public int CountTests { get; set; }
+    }
+    
+    private ApplicationDbContext? dbContext;
+    private IEnumerable<TestCountByRepository> testCountByRepositories = [];
+    
+    protected override Task OnInitializedAsync()
+    {
+        dbContext = DbFactory.CreateDbContext();
+        testCountByRepositories = LoadRepositorySummary();
+        
+        return base.OnInitializedAsync();
+    }
+
+    private IEnumerable<TestCountByRepository> LoadRepositorySummary()
+    {
+        dbContext = DbFactory.CreateDbContext();
+        var query = from repository in dbContext.Repositories
+            join workflow in dbContext.Workflows on repository.RepositoryId equals workflow.RepositoryId
+            join workflowRun in dbContext.WorkflowRuns on workflow.WorkflowId equals workflowRun.WorkflowId
+            join job in dbContext.Jobs on workflowRun.WorkflowRunId equals job.WorkflowRunId
+            join testSuite in dbContext.TestSuites on job.JobId equals testSuite.JobId
+            group testSuite by repository.FullName into g
+            select new TestCountByRepository()
+            {
+                Name = g.Key,
+                testCounts = new []
+                {
+                    new TestCount() { Status = "Passed", CountTests = g.Sum(x => x.CountPassedTests) },
+                    new TestCount() { Status = "Failed", CountTests = g.Sum(x => x.CountFailedTests) },
+                    new TestCount() { Status = "Flaky", CountTests = g.Sum(x => x.CountFlakyTests) },
+                    new TestCount() { Status = "Skipped", CountTests = g.Sum(x => x.CountSkippedTests) }
+                }
+            };
+
+        return query.ToList();
+    }
+
+    public void Dispose()
+    {
+        dbContext?.Dispose();
+    }
+}

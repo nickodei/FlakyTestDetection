@@ -1,0 +1,119 @@
+﻿@page "/tests"
+@rendermode InteractiveServer
+
+@using Microsoft.EntityFrameworkCore
+@using Application.Infrastructure
+@using Application.Features.Github.Entities
+
+@implements IDisposable
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h3>Test-Suite</h3>
+<RadzenDataGrid AllowFiltering="true" AllowGrouping="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="tests" TItem="TestResult"  LogicalFilterOperator="LogicalFilterOperator.Or" RowExpand="OnRowExpand">
+    <HeaderTemplate>
+        <RadzenButton Text="Delete Test-Suites" Click="DeleteAllTests" />
+    </HeaderTemplate>
+     <Template Context="test">
+            <RadzenDataGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@test.Attempts" TItem="TestAttempts">
+                <Columns>
+                    <RadzenDataGridColumn TItem="TestAttempts" Property="Message" Title="Error Message">
+                        <Template Context="data">
+                            <p style="white-space:pre-wrap">@data.Message</p>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </Template>
+    <Columns>
+        <RadzenDataGridColumn TItem="TestResult" Property="Name" Title="Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="TestResult" Property="CountFlaky" Title="Flaky"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="TestResult" Property="CountFailed" Title="Failed"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    private ApplicationDbContext? dbContext;
+    
+    private IEnumerable<TestResult> tests = [];
+    private class TestResult
+    {
+        public string Name { get; set; }
+        public int CountFlaky { get; set; }
+        public int CountFailed { get; set; }
+        public IEnumerable<TestAttempts> Attempts { get; set; }
+    }
+    
+    private class TestAttempts
+    {
+        public string Message { get; set; }
+    }
+
+    [CascadingParameter]
+    private Repository? SelectedRepository { get; set; }
+    
+    protected override Task OnInitializedAsync()
+    {
+        if (SelectedRepository is null)
+        {
+            return base.OnInitializedAsync();
+        }
+        
+        dbContext = DbFactory.CreateDbContext();
+        tests = LoadTests();
+
+        return base.OnInitializedAsync();
+    }
+
+    private IEnumerable<TestResult> LoadTests()
+    {
+        var query = from repository in dbContext.Repositories
+            join workflow in dbContext.Workflows on repository.RepositoryId equals workflow.RepositoryId
+            join workflowRun in dbContext.WorkflowRuns on workflow.WorkflowId equals workflowRun.WorkflowId
+            join job in dbContext.Jobs on workflowRun.WorkflowRunId equals job.WorkflowRunId
+            join testSuite in dbContext.TestSuites on job.JobId equals testSuite.JobId
+            join test in dbContext.Tests on testSuite.Id equals test.TestSuiteId
+            where repository.RepositoryId == SelectedRepository.RepositoryId
+            group test by new { test.Name }
+            into dataGroup
+            select new TestResult()
+            {
+                Name = dataGroup.Key.Name,
+                CountFailed = (from testSuite in dbContext.TestSuites
+                    join test in dbContext.Tests on testSuite.Id equals test.TestSuiteId
+                    where test.Name == dataGroup.Key.Name
+                    select testSuite).Sum(x => x.CountFailedTests),
+                CountFlaky = (from testSuite in dbContext.TestSuites
+                    join test in dbContext.Tests on testSuite.Id equals test.TestSuiteId
+                    where test.Name == dataGroup.Key.Name
+                    select testSuite).Sum(x => x.CountFlakyTests)
+            };
+        
+        return query.ToList();
+    }
+
+    private void DeleteAllTests()
+    {
+        dbContext?.TestAttempts.RemoveRange(dbContext.TestAttempts);
+        dbContext?.Tests.RemoveRange(dbContext.Tests);
+        dbContext?.SaveChanges();
+        tests = [];
+    }
+
+    public void Dispose()
+    {
+        dbContext?.Dispose();
+    }
+
+    private void OnRowExpand(TestResult obj)
+    {
+        var query = from test in dbContext.Tests
+            join testAttempt in dbContext.TestAttempts on test.Id equals testAttempt.TestId
+            select new TestAttempts()
+            {
+                Message = testAttempt.Message
+            };
+
+        obj.Attempts = query.ToList();
+    }
+}

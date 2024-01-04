@@ -1,11 +1,10 @@
-﻿@page "/Scraper"
+﻿@page "/scraper"
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.SignalR.Client
 @using WebApp.Clients
 @using Application.Features.Github.Models
-@using Microsoft.EntityFrameworkCore
 @inject NavigationManager Navigation
-@inject IScraperClient client
+@inject IScraperClient Client
 @implements IAsyncDisposable
 
 <h3>Scraper</h3>
@@ -152,23 +151,23 @@
     
     async Task OnSubmit(ScrapingRequest request)
     {
-        await client.StartScraping(request);
+        await Client.StartScraping(request);
     }
 
     async Task Cancel()
     {
-        await client.StopScraping();
+        await Client.StopScraping();
     }
 
     private void LoadWorkflows()
     {
-        workflows = client.GetWorkflows(model.Owner, model.Repository).Result;
+        workflows = Client.GetWorkflows(model.Owner, model.Repository).Result;
         InvokeAsync(StateHasChanged);
     }
 
     private void LoadJobs()
     {
-        jobs = client.GetJobs(model.Owner, model.Repository, model.WorkflowId).Result;
+        jobs = Client.GetJobs(model.Owner, model.Repository, model.WorkflowId).Result;
         InvokeAsync(StateHasChanged);
     }
 }

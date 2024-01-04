@@ -1,0 +1,161 @@
+﻿@page "/workflow-visualisation"
+@using Microsoft.EntityFrameworkCore
+@using Application.Infrastructure
+@using Application.Features.Github.Entities
+@rendermode InteractiveServer
+
+@implements IDisposable
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h3>Grouped by Date</h3>
+
+<RadzenChart>
+    <RadzenColumnSeries Data="flakyItemSet" CategoryProperty="CreatedAt" ValueProperty="CountTests" Title="Workflow runs">
+        <RadzenSeriesDataLabels  Visible="false" />
+    </RadzenColumnSeries>
+</RadzenChart>
+<RadzenChart>
+    <RadzenStackedAreaSeries Smooth="false" Data="flakyTestsPerDays" CategoryProperty="CreatedAt" Title="Flaky" ValueProperty="CountFlaky" RenderingOrder="1">
+        <RadzenSeriesDataLabels Visible="false" />
+    </RadzenStackedAreaSeries>
+    <RadzenStackedAreaSeries Smooth="false" Data="flakyTestsPerDays" CategoryProperty="CreatedAt" Title="Failed" ValueProperty="CountFailed">
+        <RadzenSeriesDataLabels Visible="false" />
+    </RadzenStackedAreaSeries>
+</RadzenChart>
+
+<h3>Grouped by Hour</h3>
+
+<RadzenChart>
+    <RadzenStackedAreaSeries Smooth="false" Data="workflowRunsPartitionedByHours" CategoryProperty="Hour" Title="Runs" ValueProperty="Count">
+        <RadzenSeriesDataLabels Visible="true" />
+    </RadzenStackedAreaSeries>
+</RadzenChart>
+<RadzenChart>
+    <RadzenStackedAreaSeries Smooth="false" Data="testsPartitionedByHours" CategoryProperty="Hour" Title="Flaky" ValueProperty="CountFlaky" RenderingOrder="1">
+        <RadzenSeriesDataLabels Visible="false" />
+    </RadzenStackedAreaSeries>
+    <RadzenStackedAreaSeries Smooth="false" Data="testsPartitionedByHours" CategoryProperty="Hour" Title="Failed" ValueProperty="CountFailed">
+        <RadzenSeriesDataLabels Visible="false" />
+    </RadzenStackedAreaSeries>
+</RadzenChart>
+
+@code {
+    private class ItemSet
+    {
+        public int CountTests { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    private class FlakyTestsPerDay
+    {
+        public int CountFlaky { get; set; }
+        public int CountFailed { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+    
+    private ApplicationDbContext? dbContext;
+    private IEnumerable<ItemSet> flakyItemSet = [];
+    private IEnumerable<FlakyTestsPerDay> flakyTestsPerDays = [];
+    
+    // By Hour
+    private IEnumerable<TestsPartitionedByHour> testsPartitionedByHours = [];
+    private IEnumerable<WorkflowRunsPartitionedByHour> workflowRunsPartitionedByHours = [];
+    
+    [CascadingParameter]
+    private Repository? SelectedRepository { get; set; }
+    
+    protected override Task OnInitializedAsync()
+    {
+        if (SelectedRepository is null)
+        {
+            return base.OnInitializedAsync();
+        }
+        
+        dbContext = DbFactory.CreateDbContext();
+        var query = from workflowRuns in dbContext.WorkflowRuns
+            group workflowRuns by workflowRuns.CreatedAt.Date into dateGroup
+            select new ItemSet()
+            {
+                CreatedAt = dateGroup.Key,
+                CountTests = dateGroup.Count()
+            };
+        
+        flakyItemSet = query.ToList();
+        flakyTestsPerDays = LoadFlakyTestsPerDay();
+
+        testsPartitionedByHours = LoadTestsPartitionedByHour();
+        workflowRunsPartitionedByHours = LoadWorkflowRunsPartitionedByHour();
+        
+        return base.OnInitializedAsync();
+    }
+
+    private IEnumerable<FlakyTestsPerDay> LoadFlakyTestsPerDay()
+    {
+        var query = from workflowRun in dbContext?.WorkflowRuns
+            join job in dbContext?.Jobs on workflowRun.WorkflowRunId equals job.WorkflowRunId
+            join testSuite in dbContext?.TestSuites on job.JobId equals testSuite.JobId
+            group testSuite by workflowRun.CreatedAt.Date
+            into dateGroup
+            select new FlakyTestsPerDay()
+            {
+                CreatedAt = dateGroup.Key,
+                CountFlaky = dateGroup.Sum(x => x.CountFlakyTests),
+                CountFailed = dateGroup.Sum(x => x.CountFailedTests)
+            };
+
+        return query.ToList();
+    }
+
+    class WorkflowRunsPartitionedByHour
+    {
+        public int Hour { get; set; }
+        public int Count { get; set; }
+    }
+
+    class TestsPartitionedByHour
+    {
+        public int Hour { get; set; }
+        public int CountFlaky { get; set; }
+        public int CountFailed { get; set; }
+    }
+
+    private IEnumerable<WorkflowRunsPartitionedByHour> LoadWorkflowRunsPartitionedByHour()
+    {
+        var query = from repository in dbContext?.Repositories
+            join workflow in dbContext?.Workflows on repository.RepositoryId equals workflow.RepositoryId
+            join workflowRun in dbContext?.WorkflowRuns on workflow.WorkflowId equals workflowRun.WorkflowId
+            where repository.RepositoryId == SelectedRepository.RepositoryId
+            group workflowRun by workflowRun.CreatedAt.Hour into dataGroup
+            select new WorkflowRunsPartitionedByHour()
+            {
+                Hour = dataGroup.Key,
+                Count = dataGroup.Count()
+            };
+
+        return query.ToList();
+    }
+    
+    private IEnumerable<TestsPartitionedByHour> LoadTestsPartitionedByHour()
+    {
+        var query = from repository in dbContext?.Repositories
+            join workflow in dbContext?.Workflows on repository.RepositoryId equals workflow.RepositoryId
+            join workflowRun in dbContext?.WorkflowRuns on workflow.WorkflowId equals workflowRun.WorkflowId
+            join job in dbContext?.Jobs on workflowRun.WorkflowRunId equals job.WorkflowRunId
+            join testSuite in dbContext?.TestSuites on job.JobId equals testSuite.JobId
+            where repository.RepositoryId == SelectedRepository.RepositoryId
+            group testSuite by workflowRun.CreatedAt.Hour into dataGroup
+            select new TestsPartitionedByHour()
+            {
+                Hour = dataGroup.Key,
+                CountFlaky = dataGroup.Sum(x => x.CountFlakyTests),
+                CountFailed = dataGroup.Sum(x => x.CountFailedTests)
+            };
+
+        return query.ToList();
+    }
+    
+    public void Dispose()
+    {
+        dbContext?.Dispose();
+    }
+}

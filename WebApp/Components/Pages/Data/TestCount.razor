@@ -1,30 +1,44 @@
-﻿@page "/Summary"
+﻿@page "/test-count"
 @rendermode InteractiveServer
 
 @using Microsoft.EntityFrameworkCore
 @using Application.Infrastructure
-@using Application.Features.Tests.Entities
+@using Application.Features.Github.Entities
 
 @implements IDisposable
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 
-<h3>Summary</h3>
+<h3>Test count</h3>
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                Data="repositorySummaries" TItem="RepositorySummary" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                Data="repositorySummaries" TItem="RepositorySummary" LogicalFilterOperator="LogicalFilterOperator.Or">
     <Columns>
-        <RadzenDataGridColumn TItem="RepositorySummary" Property="Repository" Title="Repository"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="RepositorySummary" Property="TotalTests" Title="Total Tests"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsPassed" Title="Passed Tests"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsFlaky" Title="Flaky Tests"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsFailed" Title="Failed Tests"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsSkipped" Title="Skipped Tests"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsPassed" Title="Passed Tests">
+            <Template Context="data">
+                <span>@data.TestsPassed (@(((double)data.TestsPassed / (double)data.TotalTests).ToString("0.0000%")))</span>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsFlaky" Title="Flaky Tests">
+            <Template Context="data">
+                <span>@data.TestsFlaky (@(((double)data.TestsFlaky / (double)data.TotalTests).ToString("0.0000%")))</span>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsFailed" Title="Failed Tests">
+            <Template Context="data">
+                <span>@data.TestsFailed (@(((double)data.TestsFailed / (double)data.TotalTests).ToString("0.0000%")))</span>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RepositorySummary" Property="TestsSkipped" Title="Skipped Tests">
+            <Template Context="data">
+                <span>@data.TestsSkipped (@(((double)data.TestsSkipped / (double)data.TotalTests).ToString("0.0000%")))</span>
+            </Template>
+        </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
 
 @code {
     public class RepositorySummary
     {
-        public required string Repository { get; set; }
         public required long TotalTests { get; set; }
         public required long TestsPassed { get; set; }
         public required long TestsFlaky { get; set; }
@@ -35,18 +49,26 @@
     private ApplicationDbContext? dbContext;
     private IEnumerable<RepositorySummary> repositorySummaries = [];
     
+    [CascadingParameter]
+    private Repository? SelectedRepository { get; set; }
+    
     protected override Task OnInitializedAsync()
     {
+        if (SelectedRepository is null)
+        {
+            return base.OnInitializedAsync();
+        }
+        
         dbContext = DbFactory.CreateDbContext();
         var query = from repository in dbContext.Repositories
             join workflow in dbContext.Workflows on repository.RepositoryId equals workflow.RepositoryId
             join workflowRun in dbContext.WorkflowRuns on workflow.WorkflowId equals workflowRun.WorkflowId
             join job in dbContext.Jobs on workflowRun.WorkflowRunId equals job.WorkflowRunId
             join testSuite in dbContext.TestSuites on job.JobId equals testSuite.JobId
+            where repository.RepositoryId == SelectedRepository.RepositoryId
             group testSuite by repository.FullName into g
             select new RepositorySummary()
             {
-                Repository = g.Key,
                 TestsPassed = g.Sum(x => x.CountPassedTests),
                 TestsFailed = g.Sum(x => x.CountFailedTests),
                 TestsFlaky = g.Sum(x => x.CountFlakyTests),

@@ -1,32 +1,43 @@
 ﻿@inherits LayoutComponentBase
 
+@using Microsoft.EntityFrameworkCore
+@using Application.Infrastructure
+@using Application.Features.Github.Entities
+
+@implements IDisposable
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
 <RadzenLayout>
     <RadzenHeader>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
             <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
-            <RadzenLabel Text="Header" />
+            <RadzenLabel Text="Repository" Component="DropDownRepository" Style="margin-right: 8px; vertical-align: middle;" />
+            <RadzenDropDown @bind-Value="@selectedRepository" Data="@repositories" TextProperty="FullName" Style="width: 100%; max-width: 400px;" Name="DropDownRepository"></RadzenDropDown>
         </RadzenStack>
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="sidebar1Expanded">
         <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Scraper" Path="Scraper" Icon="manage_history" />
+            <RadzenPanelMenuItem Text="Scraper" Path="scraper" Icon="manage_history" />
+            <RadzenPanelMenuItem Text="Repositories" Path="repositories" Icon="web"/>
             <RadzenPanelMenuItem Text="Data" Icon="storage" Expanded="true">
-                <RadzenPanelMenuItem Text="Summary" Path="Summary" Icon="web" />
-                <RadzenPanelMenuItem Text="Repositories" Path="RepositoryList" Icon="web"/>
+                <RadzenPanelMenuItem Text="Test count" Path="test-count" Icon="web" />
                 <RadzenPanelMenuItem Text="Workflows" Path="WorkflowList" Icon="web"/>
                 <RadzenPanelMenuItem Text="Workflow-runs" Path="WorkflowRunList" Icon="web"/>
                 <RadzenPanelMenuItem Text="Test-suites" Path="TestSuiteList" Icon="web"/>
-                <RadzenPanelMenuItem Text="Tests" Path="TestList" Icon="web"/>
+                <RadzenPanelMenuItem Text="Tests" Path="tests" Icon="web"/>
             </RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Visualisations" Icon="auto_awesome" Expanded="true">
-                <RadzenPanelMenuItem Text="Over time" Path="TestVisualisations" Icon="web"/>
+                <RadzenPanelMenuItem Text="Workflows" Path="workflow-visualisation" Icon="web"/>
+                <RadzenPanelMenuItem Text="Tests" Path="test-visualisations" Icon="web"/>
             </RadzenPanelMenuItem>
         </RadzenPanelMenu>
     </RadzenSidebar>
     <RadzenBody>
         <ChildContent>
             <RadzenContentContainer Name="main">
-                @Body
+                <CascadingValue Value="@selectedRepository">
+                    @Body
+                </CascadingValue>
             </RadzenContentContainer>
         </ChildContent>
     </RadzenBody>
@@ -34,4 +45,21 @@
 
 @code {
     bool sidebar1Expanded = true;
+    Repository? selectedRepository = null;
+    
+    private ApplicationDbContext? dbContext;
+    private IEnumerable<Repository> repositories = [];
+    protected override Task OnInitializedAsync()
+    {
+        dbContext = DbFactory.CreateDbContext();
+        repositories = dbContext.Repositories.ToList();
+        selectedRepository = repositories.FirstOrDefault();
+        
+        return base.OnInitializedAsync();
+    }
+    
+    public void Dispose()
+    {
+        dbContext?.Dispose();
+    }
 }
