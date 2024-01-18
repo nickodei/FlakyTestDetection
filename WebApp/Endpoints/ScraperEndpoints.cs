@@ -18,7 +18,7 @@ namespace WebApp.Endpoints;
 public static class ScraperEndpoints
 {
     private static CancellationTokenSource? cancellationTokenSource;
-    private static readonly string[] allowedWorkflowRunStatus = ["completed", "success", "failure"];
+    private static readonly string[] AllowedStatus = ["success", "failure", "completed"];
     public static IEndpointRouteBuilder MapScraperEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/scraper/github/{owner}/{repository}/workflows", async (string owner, string repository, IGithubApiService client) =>
@@ -81,7 +81,12 @@ public static class ScraperEndpoints
                     var workflowRun = await githubService.FindOrCreateWorkflowRun(workflowRuns.WorkflowRuns[index],
                         request.WorkflowId, dbContextFactory);
 
-                    if (!allowedWorkflowRunStatus.Contains(workflowRun.Status))
+                    if (workflowRun.Status is null)
+                    {
+                        continue;
+                    }
+                    
+                    if (!AllowedStatus.Contains(workflowRun.Status))
                     {
                         await hubContext.Clients.All.SendAsync("ReceiveLog", $"[{((page - 1) * itemsPerPage) + index + 1}/{totalAmount}] Skipping WorkflowRun with Status {workflowRun.Status}");
                         continue;
@@ -102,15 +107,14 @@ public static class ScraperEndpoints
                             }
 
                             await using var dbContext = await dbContextFactory.CreateDbContextAsync(CancellationToken.None);
-                            if (githubService.JobAlreadyExists(workflowRun.WorkflowRunId, jobName, dbContext))
+                            if (githubService.JobAlreadyExists(workflowRun.WorkflowRunId, jobName, dbContext) || !AllowedStatus.Contains(githubJob.Conclusion))
                             {
                                 return;
                             }
 
                             var job = githubService.CreateJob(workflowRun.WorkflowRunId, githubJob, dbContext);
 
-                            var url = await githubService.DownloadLogFileUrl(request.Owner, request.Repository,
-                                job.JobId, client);
+                            var url = await githubService.DownloadLogFileUrl(request.Owner, request.Repository, job.JobId, client);
                             if (url is null)
                             {
                                 await hubContext.Clients.All.SendAsync("ReceiveLog", $"[{((page - 1) * itemsPerPage) + index + 1}/{totalAmount}] Got 404 From Url-Request");
@@ -151,6 +155,8 @@ public static class ScraperEndpoints
                                 {
                                     Status = testResult.TestStatus,
                                     Name = testResult.Identifier.Name,
+                                    Path = testResult.Identifier.Path,
+                                    Platform = testResult.Identifier.Platform,
                                     Attempts = testResult.Attempts.ConvertAll(x => new TestAttempt()
                                     {
                                         Message = x.ErrorMessage

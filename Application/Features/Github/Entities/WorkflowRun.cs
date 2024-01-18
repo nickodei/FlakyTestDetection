@@ -5,7 +5,7 @@ public class WorkflowRun
     public long WorkflowRunId { get; set; }
     public required long WorkflowId { get; set; }
     public required string Name { get; set; }
-    public required string Status { get; set; }
+    public required string? Status { get; set; }
     public required string Event { get; set; }
     public required DateTime CreatedAt { get; set; }
     

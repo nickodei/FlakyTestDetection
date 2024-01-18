@@ -13,6 +13,7 @@ public class ScrapingService(IGithubApiService client, IGithubService githubServ
 {
     public async Task<Repository> FindOrCreateRepository(string owner, string name)
     {
+        int i = 3;
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
         
         var repository = await dbContext.Repositories.FirstOrDefaultAsync(x => x.Owner == owner && x.Name == name);

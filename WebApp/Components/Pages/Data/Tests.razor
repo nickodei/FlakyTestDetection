@@ -4,6 +4,7 @@
 @using Microsoft.EntityFrameworkCore
 @using Application.Infrastructure
 @using Application.Features.Github.Entities
+@using Application.Features.Tests.Entities
 
 @implements IDisposable
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
@@ -15,7 +16,7 @@
         <RadzenButton Text="Delete Test-Suites" Click="DeleteAllTests" />
     </HeaderTemplate>
      <Template Context="test">
-            <RadzenDataGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@test.Attempts" TItem="TestAttempts">
+            <RadzenDataGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@test.Attempts" ShowPagingSummary="true" TItem="TestAttempts">
                 <Columns>
                     <RadzenDataGridColumn TItem="TestAttempts" Property="Message" Title="Error Message">
                         <Template Context="data">
@@ -27,6 +28,7 @@
         </Template>
     <Columns>
         <RadzenDataGridColumn TItem="TestResult" Property="Name" Title="Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="TestResult" Property="Platform" Title="Platform"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="TestResult" Property="CountFlaky" Title="Flaky"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="TestResult" Property="CountFailed" Title="Failed"></RadzenDataGridColumn>
     </Columns>
@@ -39,6 +41,7 @@
     private class TestResult
     {
         public string Name { get; set; }
+        public string Platform { get; set; }
         public int CountFlaky { get; set; }
         public int CountFailed { get; set; }
         public IEnumerable<TestAttempts> Attempts { get; set; }
@@ -65,6 +68,7 @@
         return base.OnInitializedAsync();
     }
 
+    private record LoadTestResult(string Name, string Platform, TestStatus Status, int Count);
     private IEnumerable<TestResult> LoadTests()
     {
         var query = from repository in dbContext.Repositories
@@ -74,22 +78,19 @@
             join testSuite in dbContext.TestSuites on job.JobId equals testSuite.JobId
             join test in dbContext.Tests on testSuite.Id equals test.TestSuiteId
             where repository.RepositoryId == SelectedRepository.RepositoryId
-            group test by new { test.Name }
+            group test by new { test.Name, test.Platform, test.Status }
             into dataGroup
-            select new TestResult()
-            {
-                Name = dataGroup.Key.Name,
-                CountFailed = (from testSuite in dbContext.TestSuites
-                    join test in dbContext.Tests on testSuite.Id equals test.TestSuiteId
-                    where test.Name == dataGroup.Key.Name
-                    select testSuite).Sum(x => x.CountFailedTests),
-                CountFlaky = (from testSuite in dbContext.TestSuites
-                    join test in dbContext.Tests on testSuite.Id equals test.TestSuiteId
-                    where test.Name == dataGroup.Key.Name
-                    select testSuite).Sum(x => x.CountFlakyTests)
-            };
+            select new LoadTestResult(dataGroup.Key.Name, dataGroup.Key.Platform, dataGroup.Key.Status, dataGroup.Count());
+
+        var result = query.ToList();
         
-        return query.ToList();
+        return result.GroupBy(x => new { x.Name, x.Platform }, (s, results) => new TestResult()
+        {
+            Name = s.Name,
+            Platform = s.Platform,
+            CountFailed = results.FirstOrDefault(x => x.Status == TestStatus.Failed)?.Count ?? 0,
+            CountFlaky = results.FirstOrDefault(x => x.Status == TestStatus.Flaky)?.Count ?? 0,
+        }).ToList();
     }
 
     private void DeleteAllTests()
@@ -109,6 +110,7 @@
     {
         var query = from test in dbContext.Tests
             join testAttempt in dbContext.TestAttempts on test.Id equals testAttempt.TestId
+            where test.Name == obj.Name && test.Platform == obj.Platform 
             select new TestAttempts()
             {
                 Message = testAttempt.Message

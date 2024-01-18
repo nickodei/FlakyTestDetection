@@ -1,26 +1,23 @@
 ﻿@page "/test-visualisations"
 @using Microsoft.EntityFrameworkCore
 @using Application.Infrastructure
-@using Application.Features.Github.Entities
+@using Application.Features.Tests.Entities
 @rendermode InteractiveServer
 
 @implements IDisposable
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 
-<h3>Test visualisations</h3>
+<h3>Test Visualisations</h3>
+
+<RadzenAutoComplete Placeholder="Show for test..." Change="Callback" Data="dropdownTests" TextProperty="Name" Style="width: 100%;" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Company Name" }})" />
 
 <RadzenChart>
-    <RadzenDonutSeries Data="@testCountByRepositories.First().testCounts" CategoryProperty="Status" ValueProperty="CountTests" TotalAngle="360" StartAngle="360">
-        <ChildContent>
-            <RadzenSeriesDataLabels Visible="true" />
-        </ChildContent>
-        <TitleTemplate>
-            <div class="rz-donut-content">
-                <div>Tests by</div>
-                <div>Repository</div>
-            </div>
-        </TitleTemplate>
-    </RadzenDonutSeries>
+    <RadzenColumnSeries Data="TestFlakyOverWeaks.Where(x => x.Status == TestStatus.Flaky)" CategoryProperty="CreatedAt" Title="Flaky" LineType="LineType.Dashed" ValueProperty="Count">
+        <RadzenSeriesDataLabels Visible="false" />
+    </RadzenColumnSeries>
+    <RadzenColumnSeries Data="TestFlakyOverWeaks.Where(x => x.Status == TestStatus.Failed)" CategoryProperty="CreatedAt" Title="Failed" ValueProperty="Count">
+        <RadzenSeriesDataLabels Visible="false" />
+    </RadzenColumnSeries>
 </RadzenChart>
 
 @code {
@@ -37,16 +34,45 @@
     }
     
     private ApplicationDbContext? dbContext;
-    private IEnumerable<TestCountByRepository> testCountByRepositories = [];
+
+    private long? selected;
+    private IEnumerable<DropdownTest> dropdownTests = [];
+    private IEnumerable<TestFlakyOverWeak> TestFlakyOverWeaks = [];
     
     protected override Task OnInitializedAsync()
     {
         dbContext = DbFactory.CreateDbContext();
-        testCountByRepositories = LoadRepositorySummary();
+        //TestFlakyOverWeaks = LoadFlakyOverWeak();
+        dropdownTests = LoadTestForDropdown();
+        //testCountByRepositories = LoadRepositorySummary();
         
         return base.OnInitializedAsync();
     }
 
+    private record TestFlakyOverWeak(DateTime CreatedAt, int Count, TestStatus Status);
+    private IEnumerable<TestFlakyOverWeak> LoadFlakyOverWeak(string name)
+    {
+        var query = from repository in dbContext.Repositories
+            join workflow in dbContext.Workflows on repository.RepositoryId equals workflow.RepositoryId
+            join workflowRun in dbContext.WorkflowRuns on workflow.WorkflowId equals workflowRun.WorkflowId
+            join job in dbContext.Jobs on workflowRun.WorkflowRunId equals job.WorkflowRunId
+            join testSuite in dbContext.TestSuites on job.JobId equals testSuite.JobId
+            join test in dbContext.Tests on testSuite.Id equals test.TestSuiteId
+            where test.Name == name
+            group test by new { workflowRun.CreatedAt.Date, test.Status} into dateGroup
+            select new TestFlakyOverWeak(dateGroup.Key.Date, dateGroup.Count(), dateGroup.Key.Status);
+        return query.ToList();
+    }
+
+    private record DropdownTest(string Name);
+
+    private IEnumerable<DropdownTest> LoadTestForDropdown()
+    {
+        var query = from test in dbContext.Tests group test by test.Name into data select new DropdownTest(data.Key);
+        return query.ToList();
+    }
+    
+    
     private IEnumerable<TestCountByRepository> LoadRepositorySummary()
     {
         dbContext = DbFactory.CreateDbContext();
@@ -74,5 +100,10 @@
     public void Dispose()
     {
         dbContext?.Dispose();
+    }
+
+    private void Callback(dynamic args)
+    {
+        TestFlakyOverWeaks = LoadFlakyOverWeak(args);
     }
 }

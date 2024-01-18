@@ -55,7 +55,7 @@ public class GithubService() : IGithubService
             WorkflowId = workflowId,
             WorkflowRunId = githubWorkflowRun.Id,
             Name = githubWorkflowRun.DisplayTitle,
-            Status = githubWorkflowRun.Status,
+            Status = githubWorkflowRun.Conclusion,
             Event = githubWorkflowRun.Event,
             CreatedAt = githubWorkflowRun.CreatedAt
         };
