@@ -6,8 +6,7 @@ services:
     container_name: 'aspnetcoreapp'
     image: 'aspnetcoreapp'
     build:
-      context: ./WebApp
-      dockerfile: Dockerfile
+      dockerfile: WebApp/Dockerfile
     env_file:
       - WebApp/Settings/default.env
     ports:

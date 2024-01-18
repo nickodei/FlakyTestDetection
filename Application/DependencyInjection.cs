@@ -40,7 +40,7 @@ public static class DependencyInjection
         }).AddHttpMessageHandler<RetryHandler>();
         
         services.AddDbContextFactory<ApplicationDbContext>(options =>
-            options.UseNpgsql("User ID=postgres;Password=password;Server=localhost;Port=5432;Database=FlakyTestDetection;Pooling=true;")
+            options.UseNpgsql("User ID=postgres;Password=password;Server=postgres;Port=5432;Database=FlakyTestDetection;Pooling=true;")
         );
         
         services.AddSingleton<IGithubService, GithubService>();

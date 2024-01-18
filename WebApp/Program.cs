@@ -41,7 +41,7 @@ builder.Services.AddRefitClient<IScraperClient>()
     //})
     .ConfigureHttpClient(client => 
     {
-        client.BaseAddress = new Uri("http://localhost:5227");
+        client.BaseAddress = new Uri("http://host.docker.internal:5000");
     });
 
 builder.Services.ConfigureHttpJsonOptions(options =>

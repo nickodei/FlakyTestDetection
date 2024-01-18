@@ -121,7 +121,7 @@
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(new Uri("http://localhost:5227/scraperhub"))
+            .WithUrl(new Uri("http://host.docker.internal:5000/scraperhub"))
             .WithAutomaticReconnect()
             .Build();
 
